@@ -11,6 +11,8 @@ module com.monterdev.monterdepos {
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
     requires java.naming;
+    requires com.jfoenix;
+
 
 
 
@@ -20,4 +22,5 @@ module com.monterdev.monterdepos {
     exports com.monterdev.monterdepos.controller;
     opens com.monterdev.monterdepos.controller to javafx.fxml;
     opens com.monterdev.monterdepos.model to org.hibernate.orm.core;
+
 }
