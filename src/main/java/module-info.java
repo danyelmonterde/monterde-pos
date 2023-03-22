@@ -12,6 +12,7 @@ module com.monterdev.monterdepos {
     requires jakarta.persistence;
     requires java.naming;
     requires com.jfoenix;
+    requires org.apache.logging.log4j;
 
 
 
@@ -19,8 +20,7 @@ module com.monterdev.monterdepos {
     opens com.monterdev.monterdepos to javafx.fxml;
     opens com.monterdev.monterdepos.service to javafx.fxml;
     exports com.monterdev.monterdepos;
-    exports com.monterdev.monterdepos.controller;
-    opens com.monterdev.monterdepos.controller to javafx.fxml;
+    exports com.monterdev.monterdepos.service;
     opens com.monterdev.monterdepos.model to org.hibernate.orm.core;
 
 }

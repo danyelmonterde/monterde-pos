@@ -1,0 +1,22 @@
+21:10:30.302 [JavaFX Application Thread] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version [WORKING]
+21:10:30.310 [JavaFX Application Thread] INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+21:10:30.697 [JavaFX Application Thread] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+21:10:30.705 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Loaded JDBC driver class: com.mysql.cj.jdbc.Driver
+21:10:30.705 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001012: Connecting with JDBC URL [jdbc:mysql://localhost:3306/pos?&serverTimezone=UTC&useSSL=false]
+21:10:30.706 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, user=root}
+21:10:30.707 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+21:10:30.712 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001115: Connection pool size: 20 (min=1)
+21:10:30.957 [JavaFX Application Thread] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+21:10:31.444 [JavaFX Application Thread] INFO  org.hibernate.bytecode.internal.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+21:10:41.437 [JavaFX Application Thread] ERROR com.monterdev.monterdepos.service.CartService - sorry there's no stock available
+21:11:33.277 [JavaFX Application Thread] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version [WORKING]
+21:11:33.285 [JavaFX Application Thread] INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+21:11:33.611 [JavaFX Application Thread] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+21:11:33.619 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Loaded JDBC driver class: com.mysql.cj.jdbc.Driver
+21:11:33.619 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001012: Connecting with JDBC URL [jdbc:mysql://localhost:3306/pos?&serverTimezone=UTC&useSSL=false]
+21:11:33.620 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, user=root}
+21:11:33.620 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+21:11:33.623 [JavaFX Application Thread] INFO  org.hibernate.orm.connections.pooling - HHH10001115: Connection pool size: 20 (min=1)
+21:11:33.869 [JavaFX Application Thread] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+21:11:34.355 [JavaFX Application Thread] INFO  org.hibernate.bytecode.internal.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+21:11:38.063 [JavaFX Application Thread] INFO  com.monterdev.monterdepos.service.CartService - ok. item added to cart

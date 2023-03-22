@@ -7,15 +7,11 @@ import jakarta.persistence.*;
 @Table(name = "item")
 public class Item {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private int id;
-
     @Column(name = "item_name")
     private String itemName;
 
     @Column(name = "item_code")
+    @Id
     private String itemCode;
 
     @Column(name = "in_stock")
@@ -30,8 +26,8 @@ public class Item {
     public Item(){
 
     }
-    public Item(int id, String itemName, String itemCode, int inStock, int lowStock, double averageCost) {
-        this.id = id;
+    public Item( String itemName, String itemCode, int inStock, int lowStock, double averageCost) {
+
         this.itemName = itemName;
         this.itemCode = itemCode;
         this.inStock = inStock;
@@ -40,7 +36,6 @@ public class Item {
     }
 
     public void setNewItem(){
-        this.id = 0;
         this.itemName = "";
         this.itemCode = "";
         this.inStock = 0;
@@ -48,13 +43,6 @@ public class Item {
         this.averageCost = 0.0;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getItemName() {
         return itemName;

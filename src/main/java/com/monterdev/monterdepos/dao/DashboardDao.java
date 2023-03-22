@@ -39,13 +39,13 @@ public class DashboardDao {
         }
     }
 
-    public Item getItemById(int id){
+    public Item getItemByItemCode(String itemCode){
         Transaction transaction = null;
         Item item1 = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
 
-            item1 = session.get(Item.class,id);
+            item1 = session.get(Item.class,itemCode);
 
             transaction.commit();
         }catch (Exception ex){
@@ -57,7 +57,7 @@ public class DashboardDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Item> getItems(String itemName){
+    public List<Item> getItems(String itemCode){
         Transaction transaction = null;
 
         List<Item> itemList = null;
@@ -66,8 +66,10 @@ public class DashboardDao {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);
             Root<Item> root = cr.from(Item.class);
-            cr.select(root).where(cb.like(root.get("itemName"),"%"+itemName+"%"));
-            Query query = session.createQuery(cr);
+            cr.select(root).where(cb.like(root.get("itemCode"),"%"+itemCode+"%"));
+            Query query = session.createQuery(cr)
+                    .setFirstResult(0)
+                    .setMaxResults(10);
             itemList = query.getResultList();
 
             transaction.commit();
@@ -79,13 +81,13 @@ public class DashboardDao {
         return itemList;
     }
 
-    public Item deleteItemById(int id){
+    public Item deleteItemByItemCode(String itemCode){
         Transaction transaction = null;
         Item item = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
 
-            item = session.get(Item.class,id);
+            item = session.get(Item.class,itemCode);
             session.delete(item);
 
             transaction.commit();
