@@ -13,8 +13,7 @@ module com.monterdev.monterdepos {
     requires java.naming;
     requires com.jfoenix;
     requires org.apache.logging.log4j;
-
-
+    requires lombok;
 
 
     opens com.monterdev.monterdepos to javafx.fxml;

@@ -8,30 +8,30 @@ import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.security.Key;
 import java.util.List;
 
 public class SearchService extends DescriptionService {
 
     private ObservableList<String> listOfItems;
 
+    private DashboardDao dashboardDao;
+
     @FXML
     public void searchItemFromItemList(KeyEvent e) {
 
-        if(e.getCode() == KeyCode.END){
+        if (e.getCode() == KeyCode.END) {
             amountPaid.requestFocus();
-        }
-        else if(e.getCode() == KeyCode.HOME){
+        } else if (e.getCode() == KeyCode.HOME && cart.getItems().size()>0) {
             cart.requestFocus();
-        }
-        else if(e.getCode() == KeyCode.RIGHT){
+            cart.getSelectionModel().select(0);
+        } else if (e.getCode() == KeyCode.CONTROL) {
             quantity.requestFocus();
         }
 
 
         listOfItems = FXCollections.observableArrayList();
 
-        DashboardDao dashboardDao = new DashboardDao();
+        dashboardDao = DashboardDao.getInstance();
         List<Item> itemList = dashboardDao.getItems(super.searchItem.getText());
         itemList.stream().forEach(s -> {
             listOfItems.add(s.getItemCode());

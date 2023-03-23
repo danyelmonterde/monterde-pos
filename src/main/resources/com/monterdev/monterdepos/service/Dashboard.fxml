@@ -64,7 +64,7 @@
       <items>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Search" textAlignment="CENTER" wrapText="false">
+            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Search(ESCAPE)" textAlignment="CENTER" wrapText="false">
               <font>
                 <Font size="18.0" fx:id="x1" />
               </font>
@@ -83,7 +83,7 @@
           <content>
             <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="343.0">
               <children>
-                <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Description" textAlignment="CENTER" textFill="$x2" wrapText="false">
+                <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Description(CTRL)" textAlignment="CENTER" textFill="$x2" wrapText="false">
                            <font>
                               <Font size="23.0" />
                            </font></Label>
@@ -163,7 +163,7 @@
         </ScrollPane>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Cart" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Cart(HOME)" textAlignment="CENTER" textFill="$x2" wrapText="false" />
                   <ListView fx:id="cart" layoutX="11.0" layoutY="63.0" onKeyReleased="#selectedItemFromCart" prefHeight="279.0" prefWidth="506.0" style="-fx-font-size: 20;" styleClass="list-cell" />
                   <Label layoutX="11.0" layoutY="410.0" text="Grand Total:">
                      <font>

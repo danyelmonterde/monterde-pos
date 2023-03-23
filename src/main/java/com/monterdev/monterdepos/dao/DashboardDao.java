@@ -15,11 +15,15 @@ public class DashboardDao {
 
     private static DashboardDao dashboardDao;
 
+    private DashboardDao(){
+
+    }
 
     public static DashboardDao getInstance(){
         if (dashboardDao == null) {
-            return new DashboardDao();
-        }else return dashboardDao;
+            dashboardDao = new DashboardDao();
+        }
+        return dashboardDao;
     }
 
     public void saveItem(Item item){
