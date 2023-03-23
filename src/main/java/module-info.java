@@ -19,6 +19,7 @@ module com.monterdev.monterdepos {
 
     opens com.monterdev.monterdepos to javafx.fxml;
     opens com.monterdev.monterdepos.service to javafx.fxml;
+    opens com.monterdev.monterdepos.components to javafx.fxml;
     exports com.monterdev.monterdepos;
     exports com.monterdev.monterdepos.service;
     exports com.monterdev.monterdepos.components;

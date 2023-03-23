@@ -13,6 +13,15 @@ import java.util.List;
 
 public class DashboardDao {
 
+    private static DashboardDao dashboardDao;
+
+
+    public static DashboardDao getInstance(){
+        if (dashboardDao == null) {
+            return new DashboardDao();
+        }else return dashboardDao;
+    }
+
     public void saveItem(Item item){
         Transaction transaction = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){

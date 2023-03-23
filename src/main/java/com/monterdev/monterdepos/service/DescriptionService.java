@@ -13,6 +13,7 @@ public class DescriptionService extends CartService {
 
     @FXML
     public void searchItemByItemCode() {
+        quantity.requestFocus();
         String selectedItemCode = String.valueOf(itemListView.getSelectionModel().getSelectedItem());
         itemCode.setText(selectedItemCode);
         DashboardDao dashboardDao = new DashboardDao();
@@ -26,6 +27,7 @@ public class DescriptionService extends CartService {
         } else {
             lowStock.setText("No");
         }
+        searchItem.clear();
 
 
     }

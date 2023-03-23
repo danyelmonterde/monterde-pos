@@ -32,6 +32,8 @@ public class CartService extends DashboardComponents {
     private static final String CART_TEXT_SEPARATOR = "|";
     private static final String CART_TEXT_SEPARATOR_REGEX = "\\|";
 
+    private static final String NOT_A_NUMBER ="Input quantity is not a number";
+
 
 
     @FXML
@@ -55,6 +57,9 @@ public class CartService extends DashboardComponents {
                 });
                 grandTotal.setText(String.valueOf(total));
                 cart.setItems(itemsOnCartArrayList);
+                searchItem.requestFocus();
+                searchItem.setText("");
+                resetSelectedItem();
             }
 
         }
@@ -62,6 +67,7 @@ public class CartService extends DashboardComponents {
 
     @FXML
     public void selectedItemFromCart(KeyEvent e) {
+
         selectedIndex = cart.getSelectionModel().getSelectedIndex();
         String selectedText = (String) cart.getSelectionModel().getSelectedItem();
         String itemCode = selectedText.split(CART_TEXT_SEPARATOR_REGEX)[0];
@@ -73,19 +79,16 @@ public class CartService extends DashboardComponents {
             cart.getItems().remove(selectedIndex);
             itemsOnCartSet.remove(selectedText);
             total -= (item.getAverageCost()*Integer.parseInt(quantity));
-            double amountPaid = Double.parseDouble(super.amountPaid.getText());
-            double change = amountPaid - total;
             super.grandTotal.setText(String.valueOf(total));
-            super.change.setText(String.valueOf(change));
+            super.change.setText("0");
             LOGGER.info(ITEM_REMOVED_FROM_CART);
         } else if (e.getCode() == KeyCode.ENTER) {
             //UPDATE SELECTED ITEM TO DESCRIPTION CONTAINER, REMOVE IT FROM CART AND DEDUCT IT FROM TOTAL
+            super.quantity.requestFocus();
             cart.getItems().remove(selectedIndex);
             itemsOnCartSet.remove(selectedText);
             total -= item.getAverageCost();
-            double amountPaid = Double.parseDouble(super.amountPaid.getText());
-            double change = amountPaid - total;
-            super.change.setText(String.valueOf(change));
+            super.change.setText("0");
             super.grandTotal.setText(String.valueOf(total));
             super.itemCode.setText(itemCode);
             super.itemName.setText(item.getItemName());
@@ -93,6 +96,12 @@ public class CartService extends DashboardComponents {
             super.inStock.setText(String.valueOf(item.getInStock()));
             super.lowStock.setText(String.valueOf(item.getLowStock()));
             super.averageCost.setText(String.valueOf(item.getAverageCost()));
+        }else if(e.getCode() == KeyCode.ESCAPE){
+            searchItem.requestFocus();
+            super.amountPaid.setText("0");
+            super.change.setText("0");
+        }else if(e.getCode() == KeyCode.END){
+            amountPaid.requestFocus();
         }
     }
 
@@ -102,7 +111,39 @@ public class CartService extends DashboardComponents {
         double amountPaid = Double.parseDouble(super.amountPaid.getText());
         double change = amountPaid - grandTotal;
         super.change.setText(String.valueOf(change));
+        if(e.getCode() == KeyCode.ESCAPE){
+            searchItem.requestFocus();
+            super.amountPaid.setText("0");
+            super.change.setText("0");
+        }else if(e.getCode() == KeyCode.LEFT){
+            quantity.requestFocus();
+        }else if(e.getCode() == KeyCode.UP){
+            cart.requestFocus();
+        }
+    }
 
+    @FXML
+    public void enterItemToCartFromQuantity(KeyEvent e){
+        try{
+            if(e.getCode() == KeyCode.ENTER && (Integer.parseInt(quantity.getText())>0)){
+                addItemToCart();
+            }else if(e.getCode() == KeyCode.ESCAPE){
+                searchItem.requestFocus();
+            }else if(e.getCode() == KeyCode.END){
+                amountPaid.requestFocus();
+            }
+        }catch (NumberFormatException numberFormatException){
+            LOGGER.error(NOT_A_NUMBER);
+        }
 
+    }
+
+    public void resetSelectedItem(){
+        itemCode.setText("");
+        itemName.setText("");
+        averageCost.setText("");
+        quantity.setText("0");
+        inStock.setText("0");
+        lowStock.setText("");
     }
 }

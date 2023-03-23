@@ -10,33 +10,33 @@ import javafx.scene.control.TextField;
 public class DashboardComponents {
 
     @FXML
-    public ListView cart;
+    protected TextField searchItem;
     @FXML
-    public CheckBox discounted;
+    protected ListView cart;
     @FXML
-    public TextField grandTotal;
+    protected CheckBox discounted;
     @FXML
-    public TextField amountPaid;
+    protected TextField grandTotal;
     @FXML
-    public TextField change;
+    protected TextField amountPaid;
     @FXML
-    public JFXButton btnReceipt;
+    protected TextField change;
     @FXML
-    public Label itemCode;
+    protected JFXButton btnReceipt;
     @FXML
-    public Label itemName;
+    protected Label itemCode;
     @FXML
-    public Label averageCost;
+    protected Label itemName;
     @FXML
-    public TextField quantity;
+    protected Label averageCost;
     @FXML
-    public Label inStock;
+    protected TextField quantity;
     @FXML
-    public Label lowStock;
+    protected Label inStock;
     @FXML
-    public Label addedBy;
+    protected Label lowStock;
     @FXML
-    public JFXButton btnAddItem;
+    protected JFXButton btnAddItem;
     @FXML
-    public JFXButton btnCancelItem;
+    protected JFXButton btnCancelItem;
 }
