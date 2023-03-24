@@ -16,12 +16,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "transaction")
-public class Transaction {
+@Table(name = "sales_transaction")
+public class SalesTransaction {
 
     @Id
-    @Column(name = "transaction_id")
-    private String transactionId;
+    @Column(name = "transaction_number")
+    private String transactionNumber;
 
     @Column(name = "grand_total")
     private double grandTotal;
@@ -37,7 +37,6 @@ public class Transaction {
 
     @Column(name = "amount_paid")
     private double amountPaid;
-
 
     @Column(name = "date_transacted")
     private Date dateTransacted;

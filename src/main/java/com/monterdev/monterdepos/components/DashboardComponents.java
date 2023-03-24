@@ -39,4 +39,5 @@ public class DashboardComponents {
     protected JFXButton btnAddItem;
     @FXML
     protected JFXButton btnCancelItem;
+
 }

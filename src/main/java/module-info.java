@@ -14,6 +14,7 @@ module com.monterdev.monterdepos {
     requires com.jfoenix;
     requires org.apache.logging.log4j;
     requires lombok;
+    requires java.desktop;
 
 
     opens com.monterdev.monterdepos to javafx.fxml;

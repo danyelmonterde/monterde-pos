@@ -180,12 +180,12 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <CheckBox fx:id="discounted" layoutX="11.0" layoutY="367.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="248.0" text="Discounted">
+                  <CheckBox fx:id="discounted" layoutX="11.0" layoutY="367.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="248.0" text="Senior Citizen">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </CheckBox>
-                  <JFXButton fx:id="btnReceipt" layoutX="264.0" layoutY="505.0" style="-fx-background-color: black;" text="Receipt" textFill="WHITE">
+                  <JFXButton fx:id="btnReceipt" layoutX="264.0" layoutY="505.0" onAction="#printReceipt" style="-fx-background-color: black;" text="Receipt" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

@@ -7,8 +7,9 @@ import com.monterdev.monterdepos.dao.TransactionDao;
 import com.monterdev.monterdepos.exception.POSException;
 import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Sales;
-import com.monterdev.monterdepos.model.Transaction;
+import com.monterdev.monterdepos.model.SalesTransaction;
 import com.monterdev.monterdepos.util.Prompt;
+import com.monterdev.monterdepos.util.TransactionNumberGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -18,12 +19,13 @@ import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.*;
+import java.awt.print.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-public class CartService extends DashboardComponents {
+public class CartService extends DashboardComponents implements Printable {
 
     private ObservableSet<String> itemsOnCartSet = FXCollections.observableSet();
     private static final String PCS = " PCS";
@@ -55,7 +57,7 @@ public class CartService extends DashboardComponents {
     public void addItemToCart() {
 
         ObservableList<String> itemsOnCartArrayList = FXCollections.observableArrayList();
-        try{
+        try {
             if (inStock.getText() == "0" || (Integer.parseInt(quantity.getText()) > Integer.parseInt(inStock.getText()))) {
                 LOGGER.error(NO_STOCK_AVAILABLE);
             } else {
@@ -78,8 +80,8 @@ public class CartService extends DashboardComponents {
                 }
 
             }
-        }catch (NumberFormatException emptyQuantity){
-            LOGGER.error(new POSException(NOT_A_NUMBER,emptyQuantity.getCause()));
+        } catch (NumberFormatException emptyQuantity) {
+            LOGGER.error(new POSException(NOT_A_NUMBER, emptyQuantity.getCause()));
         }
 
     }
@@ -178,7 +180,7 @@ public class CartService extends DashboardComponents {
         lowStock.setText("");
     }
 
-    private void resetCart(){
+    private void resetCart() {
         cart.getItems().clear();
         itemsOnCartSet.clear();
     }
@@ -186,11 +188,12 @@ public class CartService extends DashboardComponents {
     public void checkout() {
 
 
-        if(Prompt.confirm("Are you sure you want to continue?").isPresent()){
-            Transaction systemTransaction = new Transaction();
-            UUID uuid = UUID.randomUUID();
-            systemTransaction.setTransactionId(uuid.toString());
-            systemTransaction.setDateTransacted(new Date());
+        if (Prompt.confirm("Are you sure you want to continue?").isPresent()) {
+            printReceipt();
+            SalesTransaction systemSalesTransaction = new SalesTransaction();
+            String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
+            systemSalesTransaction.setTransactionNumber(transactionNumber);
+            systemSalesTransaction.setDateTransacted(new Date());
 
             List<Double> priceOfItemsInCart = new ArrayList<>();
             cart.getItems().stream().forEach(data -> {
@@ -212,27 +215,116 @@ public class CartService extends DashboardComponents {
                 salesTransaction.setItemName(item.getItemName());
                 salesTransaction.setQuantity(Integer.parseInt(item_quantity));
                 salesTransactionDao = SalesTransactionDao.getInstance();
-                salesTransaction.setTransactionId(systemTransaction.getTransactionId());
+                salesTransaction.setTransactionNumber(systemSalesTransaction.getTransactionNumber());
                 salesTransactionDao.saveSalesTransaction(salesTransaction);
-
 
 
                 LOGGER.info("Item and Sales salesTransaction was saved!");
             });
             double grandTotal = priceOfItemsInCart.stream()
-                            .reduce(0.0,Double::sum);
-            systemTransaction.setTotalItems(cart.getItems().size());
-            systemTransaction.setGrandTotal(grandTotal);
-            systemTransaction.setMoneyChange(Double.parseDouble(change.getText()));
-            systemTransaction.setDiscount(0.0);
-            systemTransaction.setAmountPaid(Double.parseDouble(amountPaid.getText()));
+                    .reduce(0.0, Double::sum);
+            systemSalesTransaction.setTotalItems(cart.getItems().size());
+            systemSalesTransaction.setGrandTotal(grandTotal);
+            systemSalesTransaction.setMoneyChange(Double.parseDouble(change.getText()));
+            systemSalesTransaction.setDiscount(0.0);
+            systemSalesTransaction.setAmountPaid(Double.parseDouble(amountPaid.getText()));
 
             transactionDao = TransactionDao.getInstance();
-            transactionDao.saveTransaction(systemTransaction);
+            transactionDao.saveTransaction(systemSalesTransaction);
 
             resetCart();
             resetSelectedItem();
+            resetTransaction();
             searchItem.requestFocus();
         }
+    }
+
+    @FXML
+    private void printReceipt() {
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable(this);
+        boolean ok = job.printDialog();
+        if (ok) {
+            try {
+                job.print();
+            } catch (PrinterException ex) {
+                LOGGER.error(new POSException("Error printing",ex.getCause()));
+            }
+        }
+    }
+
+    private void resetTransaction(){
+        grandTotal.setText("0");
+        amountPaid.setText("0");
+        change.setText("0");
+    }
+
+    @Override
+    public int print(Graphics g, PageFormat pf, int page) throws
+            PrinterException {
+        int r= cart.getItems().size();
+       // ImageIcon icon=new ImageIcon("C:UsersccsDocumentsNetBeansProjectsvideo TestPOSInvoicesrcposinvoicemylogo.jpg");
+        int result = NO_SUCH_PAGE;
+        if (page == 0) {
+
+            Graphics2D g2d = (Graphics2D) g;
+            double width = pf.getImageableWidth();
+            g2d.translate((int) pf.getImageableX(),(int) pf.getImageableY());
+
+
+
+            //  FontMetrics metrics=g2d.getFontMetrics(new Font("Arial",Font.BOLD,7));
+
+            try{
+                int y=20;
+                int yShift = 10;
+                int headerRectHeight=15;
+                // int headerRectHeighta=40;
+
+
+                g2d.setFont(new Font("Ubuntu",Font.PLAIN,9));
+                //g2d.drawImage(icon.getImage(), 50, 20, 90, 30, rootPane);y+=yShift+30;
+                g2d.drawString("-------------------------------------",12,y);y+=yShift;
+                g2d.drawString("         Alen Cai Grocery Store        ",12,y);y+=yShift;
+                g2d.drawString("   Jaguar corner Coronet Street ",12,y);y+=yShift;
+                g2d.drawString("   Fairview Quezon City ",12,y);y+=yShift;
+                g2d.drawString("   www.facebook.com/AlenCaiStore ",12,y);y+=yShift;
+                g2d.drawString("        +639182281576      ",12,y);y+=yShift;
+                g2d.drawString("-------------------------------------",12,y);y+=headerRectHeight;
+
+                g2d.drawString(" Item Name                  Price   ",10,y);y+=yShift;
+                g2d.drawString("-------------------------------------",10,y);y+=headerRectHeight;
+
+
+                for(int s=0;s<r;s++){
+                    dashboardDao = DashboardDao.getInstance();
+
+                    Item item = dashboardDao.getItemByItemCode(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[0]);
+                    double sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]);
+                    g2d.drawString(" "+cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1]+"                            ",10,y);y+=yShift;
+                    g2d.drawString("      "+cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]+" * "+item.getAverageCost(),10,y); g2d.drawString(String.valueOf(sumOfItemsInCart),160,y);y+=yShift;
+                }
+                g2d.drawString("-------------------------------------",10,y);y+=yShift;
+                g2d.drawString(" Total amount:               "+grandTotal.getText()+"   ",10,y);y+=yShift;
+                g2d.drawString("-------------------------------------",10,y);y+=yShift;
+                g2d.drawString(" Cash      :                 "+amountPaid.getText()+"   ",10,y);y+=yShift;
+                g2d.drawString("-------------------------------------",10,y);y+=yShift;
+                g2d.drawString(" Balance   :                 "+change.getText()+"   ",10,y);y+=yShift;
+
+                g2d.drawString("*************************************",10,y);y+=yShift;
+                g2d.drawString("       THANK YOU COME AGAIN            ",10,y);y+=yShift;
+                g2d.drawString("*************************************",10,y);y+=yShift;
+                g2d.drawString("       SOFTWARE BY:MONTERDEV          ",10,y);y+=yShift;
+                g2d.drawString("   CONTACT: daniel@monterdev.com       ",10,y);y+=yShift;
+
+
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+            result = PAGE_EXISTS;
+        }
+        return result;
     }
 }

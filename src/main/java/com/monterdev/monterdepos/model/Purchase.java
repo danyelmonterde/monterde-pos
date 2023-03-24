@@ -14,8 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "sales")
-public class Sales{
+@Table(name = "purchase")
+public class Purchase {
 
     @Id
     private int id;
@@ -26,13 +26,13 @@ public class Sales{
     @Column(name = "item_name")
     private String itemName;
 
-    @Column(name = "price")
-    private double price;
-
-    @Column(name = "total")
-    private double total;
+    @Column(name = "cost")
+    private double cost;
 
     @Column(name = "quantity")
     private int quantity;
+
+    @Column(name = "total")
+    private double total;
 
 }

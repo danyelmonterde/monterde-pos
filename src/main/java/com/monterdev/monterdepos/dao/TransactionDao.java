@@ -1,6 +1,6 @@
 package com.monterdev.monterdepos.dao;
 
-import com.monterdev.monterdepos.model.Sales;
+import com.monterdev.monterdepos.model.SalesTransaction;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -21,11 +21,11 @@ public class TransactionDao {
         return transactionDao;
     }
 
-    public void saveTransaction(com.monterdev.monterdepos.model.Transaction systemTransaction){
+    public void saveTransaction(SalesTransaction systemSalesTransaction){
         Transaction transaction = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
-            session.save(systemTransaction);
+            session.save(systemSalesTransaction);
             transaction.commit();
         }catch (Exception ex){
             if(transaction!= null){
