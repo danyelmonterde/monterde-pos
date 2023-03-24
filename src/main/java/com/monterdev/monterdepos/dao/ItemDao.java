@@ -11,19 +11,19 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class DashboardDao {
+public class ItemDao {
 
-    private static DashboardDao dashboardDao;
+    private static ItemDao itemDao;
 
-    private DashboardDao(){
+    private ItemDao(){
 
     }
 
-    public static DashboardDao getInstance(){
-        if (dashboardDao == null) {
-            dashboardDao = new DashboardDao();
+    public static ItemDao getInstance(){
+        if (itemDao == null) {
+            itemDao = new ItemDao();
         }
-        return dashboardDao;
+        return itemDao;
     }
 
     public void saveItem(Item item){

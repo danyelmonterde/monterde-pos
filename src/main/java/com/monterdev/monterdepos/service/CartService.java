@@ -1,7 +1,7 @@
 package com.monterdev.monterdepos.service;
 
 import com.monterdev.monterdepos.components.DashboardComponents;
-import com.monterdev.monterdepos.dao.DashboardDao;
+import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.dao.SalesTransactionDao;
 import com.monterdev.monterdepos.dao.TransactionDao;
 import com.monterdev.monterdepos.exception.POSException;
@@ -14,16 +14,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.text.html.Option;
 import java.awt.*;
-import java.awt.print.*;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class CartService extends DashboardComponents implements Printable {
 
@@ -32,21 +38,15 @@ public class CartService extends DashboardComponents implements Printable {
     private static final Logger LOGGER = LogManager.getLogger(CartService.class);
     private int selectedIndex = 0;
     private double total = 0.0;
-
     private static final String NO_STOCK_AVAILABLE = "sorry there's no stock available";
-
     private static final String ITEM_ADDED_TO_CART = "ok. item added to cart";
-
     private static final String ITEM_REMOVED_FROM_CART = "Item removed from cart";
-
     private static final String CART_TEXT_SEPARATOR = "|";
     private static final String CART_TEXT_SEPARATOR_REGEX = "\\|";
-
     private static final String NOT_A_NUMBER = "Input quantity is not a number";
-
     private static final int NOT_A_NUMBER_ERROR_CODE = 2001;
 
-    private DashboardDao dashboardDao;
+    private ItemDao itemDao;
 
     private SalesTransactionDao salesTransactionDao;
 
@@ -93,8 +93,8 @@ public class CartService extends DashboardComponents implements Printable {
             String selectedText = (String) cart.getSelectionModel().getSelectedItem();
             String itemCode = selectedText.split(CART_TEXT_SEPARATOR_REGEX)[0];
             String quantity = selectedText.split(CART_TEXT_SEPARATOR_REGEX)[2];
-            dashboardDao = DashboardDao.getInstance();
-            Item item = dashboardDao.getItemByItemCode(itemCode);
+            itemDao = ItemDao.getInstance();
+            Item item = itemDao.getItemByItemCode(itemCode);
             if (e.getCode() == KeyCode.DELETE && (!cart.getItems().isEmpty())) {
                 //REMOVE ITEM FROM CART AND DEDUCT FROM TOTAL
                 cart.getItems().remove(selectedIndex);
@@ -187,55 +187,60 @@ public class CartService extends DashboardComponents implements Printable {
 
     public void checkout() {
 
+        Optional<ButtonType> transactConfirmation = Prompt.confirm("Are you sure you want to continue?");
+        if (transactConfirmation.isPresent()) {
+            if(transactConfirmation.get().getText().equals("OK")){
+                printReceipt();
+                SalesTransaction systemSalesTransaction = new SalesTransaction();
+                String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
+                systemSalesTransaction.setTransactionNumber(transactionNumber);
+                systemSalesTransaction.setDateTransacted(new Date());
 
-        if (Prompt.confirm("Are you sure you want to continue?").isPresent()) {
-            printReceipt();
-            SalesTransaction systemSalesTransaction = new SalesTransaction();
-            String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
-            systemSalesTransaction.setTransactionNumber(transactionNumber);
-            systemSalesTransaction.setDateTransacted(new Date());
+                List<Double> priceOfItemsInCart = new ArrayList<>();
+                cart.getItems().stream().forEach(data -> {
+                    double sumOfItemsInCart = 0.0;
+                    String item_code = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[0];
+                    String item_quantity = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[2];
+                    itemDao = ItemDao.getInstance();
 
-            List<Double> priceOfItemsInCart = new ArrayList<>();
-            cart.getItems().stream().forEach(data -> {
-                double sumOfItemsInCart = 0.0;
-                String item_code = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[0];
-                String item_quantity = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[2];
-                dashboardDao = DashboardDao.getInstance();
+                    Item item = itemDao.getItemByItemCode(item_code);
 
-                Item item = dashboardDao.getItemByItemCode(item_code);
+                    int in_stock = item.getInStock();
+                    item.setInStock(in_stock - Integer.parseInt(item_quantity));
+                    sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(item_quantity);
+                    priceOfItemsInCart.add(sumOfItemsInCart);
+                    itemDao.updateItem(item);
 
-                int in_stock = item.getInStock();
-                item.setInStock(in_stock - Integer.parseInt(item_quantity));
-                sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(item_quantity);
-                priceOfItemsInCart.add(sumOfItemsInCart);
-                dashboardDao.updateItem(item);
-
-                Sales salesTransaction = new Sales();
-                salesTransaction.setTotal(sumOfItemsInCart);
-                salesTransaction.setItemName(item.getItemName());
-                salesTransaction.setQuantity(Integer.parseInt(item_quantity));
-                salesTransactionDao = SalesTransactionDao.getInstance();
-                salesTransaction.setTransactionNumber(systemSalesTransaction.getTransactionNumber());
-                salesTransactionDao.saveSalesTransaction(salesTransaction);
+                    Sales salesTransaction = new Sales();
+                    salesTransaction.setTotal(sumOfItemsInCart);
+                    salesTransaction.setItemName(item.getItemName());
+                    salesTransaction.setQuantity(Integer.parseInt(item_quantity));
+                    salesTransaction.setPrice(item.getAverageCost());
+                    salesTransactionDao = SalesTransactionDao.getInstance();
+                    salesTransaction.setTransactionNumber(systemSalesTransaction.getTransactionNumber());
+                    salesTransactionDao.saveSalesTransaction(salesTransaction);
 
 
-                LOGGER.info("Item and Sales salesTransaction was saved!");
-            });
-            double grandTotal = priceOfItemsInCart.stream()
-                    .reduce(0.0, Double::sum);
-            systemSalesTransaction.setTotalItems(cart.getItems().size());
-            systemSalesTransaction.setGrandTotal(grandTotal);
-            systemSalesTransaction.setMoneyChange(Double.parseDouble(change.getText()));
-            systemSalesTransaction.setDiscount(0.0);
-            systemSalesTransaction.setAmountPaid(Double.parseDouble(amountPaid.getText()));
+                    LOGGER.info("Item and Sales salesTransaction was saved!");
+                });
+                double grandTotal = priceOfItemsInCart.stream()
+                        .reduce(0.0, Double::sum);
+                systemSalesTransaction.setTotalItems(cart.getItems().size());
+                systemSalesTransaction.setGrandTotal(grandTotal);
+                systemSalesTransaction.setMoneyChange(Double.parseDouble(change.getText()));
+                systemSalesTransaction.setDiscount(0.0);
+                systemSalesTransaction.setAmountPaid(Double.parseDouble(amountPaid.getText()));
 
-            transactionDao = TransactionDao.getInstance();
-            transactionDao.saveTransaction(systemSalesTransaction);
+                transactionDao = TransactionDao.getInstance();
+                transactionDao.saveTransaction(systemSalesTransaction);
 
-            resetCart();
-            resetSelectedItem();
-            resetTransaction();
-            searchItem.requestFocus();
+                resetCart();
+                resetSelectedItem();
+                resetTransaction();
+                searchItem.requestFocus();
+                Prompt.success("Thank you for buying!");
+            }
+
         }
     }
 
@@ -248,12 +253,14 @@ public class CartService extends DashboardComponents implements Printable {
             try {
                 job.print();
             } catch (PrinterException ex) {
-                LOGGER.error(new POSException("Error printing",ex.getCause()));
+                LOGGER.error(new POSException("Error printing", ex.getCause()));
             }
+        }else{
+            Prompt.success("No receipt will be printed!");
         }
     }
 
-    private void resetTransaction(){
+    private void resetTransaction() {
         grandTotal.setText("0");
         amountPaid.setText("0");
         change.setText("0");
@@ -262,64 +269,85 @@ public class CartService extends DashboardComponents implements Printable {
     @Override
     public int print(Graphics g, PageFormat pf, int page) throws
             PrinterException {
-        int r= cart.getItems().size();
-       // ImageIcon icon=new ImageIcon("C:UsersccsDocumentsNetBeansProjectsvideo TestPOSInvoicesrcposinvoicemylogo.jpg");
+        int r = cart.getItems().size();
+        // ImageIcon icon=new ImageIcon("C:UsersccsDocumentsNetBeansProjectsvideo TestPOSInvoicesrcposinvoicemylogo.jpg");
         int result = NO_SUCH_PAGE;
         if (page == 0) {
 
             Graphics2D g2d = (Graphics2D) g;
             double width = pf.getImageableWidth();
-            g2d.translate((int) pf.getImageableX(),(int) pf.getImageableY());
-
+            g2d.translate((int) pf.getImageableX(), (int) pf.getImageableY());
 
 
             //  FontMetrics metrics=g2d.getFontMetrics(new Font("Arial",Font.BOLD,7));
 
-            try{
-                int y=20;
+            try {
+                int y = 20;
                 int yShift = 10;
-                int headerRectHeight=15;
+                int headerRectHeight = 15;
                 // int headerRectHeighta=40;
 
 
-                g2d.setFont(new Font("Ubuntu",Font.PLAIN,9));
+                g2d.setFont(new Font("Ubuntu", Font.PLAIN, 9));
                 //g2d.drawImage(icon.getImage(), 50, 20, 90, 30, rootPane);y+=yShift+30;
-                g2d.drawString("-------------------------------------",12,y);y+=yShift;
-                g2d.drawString("         Alen Cai Grocery Store        ",12,y);y+=yShift;
-                g2d.drawString("   Jaguar corner Coronet Street ",12,y);y+=yShift;
-                g2d.drawString("   Fairview Quezon City ",12,y);y+=yShift;
-                g2d.drawString("   www.facebook.com/AlenCaiStore ",12,y);y+=yShift;
-                g2d.drawString("        +639182281576      ",12,y);y+=yShift;
-                g2d.drawString("-------------------------------------",12,y);y+=headerRectHeight;
+                g2d.drawString("-------------------------------------", 12, y);
+                y += yShift;
+                g2d.drawString("         Alen Cai Grocery Store        ", 12, y);
+                y += yShift;
+                g2d.drawString("   Jaguar corner Coronet Street ", 12, y);
+                y += yShift;
+                g2d.drawString("   Fairview Quezon City ", 12, y);
+                y += yShift;
+                g2d.drawString("   www.facebook.com/AlenCaiStore ", 12, y);
+                y += yShift;
+                g2d.drawString("        +639182281576      ", 12, y);
+                y += yShift;
+                g2d.drawString("-------------------------------------", 12, y);
+                y += headerRectHeight;
 
-                g2d.drawString(" Item Name                  Price   ",10,y);y+=yShift;
-                g2d.drawString("-------------------------------------",10,y);y+=headerRectHeight;
+                g2d.drawString(" Item Name                  Price   ", 10, y);
+                y += yShift;
+                g2d.drawString("-------------------------------------", 10, y);
+                y += headerRectHeight;
 
 
-                for(int s=0;s<r;s++){
-                    dashboardDao = DashboardDao.getInstance();
+                for (int s = 0; s < r; s++) {
+                    itemDao = ItemDao.getInstance();
 
-                    Item item = dashboardDao.getItemByItemCode(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[0]);
+                    Item item = itemDao.getItemByItemCode(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[0]);
                     double sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]);
-                    g2d.drawString(" "+cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1]+"                            ",10,y);y+=yShift;
-                    g2d.drawString("      "+cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]+" * "+item.getAverageCost(),10,y); g2d.drawString(String.valueOf(sumOfItemsInCart),160,y);y+=yShift;
+                    g2d.drawString(" " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1] + "                            ", 10, y);
+                    y += yShift;
+                    g2d.drawString("      " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2] + " * " + item.getAverageCost(), 10, y);
+                    g2d.drawString(String.valueOf(sumOfItemsInCart), 160, y);
+                    y += yShift;
                 }
-                g2d.drawString("-------------------------------------",10,y);y+=yShift;
-                g2d.drawString(" Total amount:               "+grandTotal.getText()+"   ",10,y);y+=yShift;
-                g2d.drawString("-------------------------------------",10,y);y+=yShift;
-                g2d.drawString(" Cash      :                 "+amountPaid.getText()+"   ",10,y);y+=yShift;
-                g2d.drawString("-------------------------------------",10,y);y+=yShift;
-                g2d.drawString(" Balance   :                 "+change.getText()+"   ",10,y);y+=yShift;
+                g2d.drawString("-------------------------------------", 10, y);
+                y += yShift;
+                g2d.drawString(" Total amount:               " + grandTotal.getText() + "   ", 10, y);
+                y += yShift;
+                g2d.drawString("-------------------------------------", 10, y);
+                y += yShift;
+                g2d.drawString(" Cash      :                 " + amountPaid.getText() + "   ", 10, y);
+                y += yShift;
+                g2d.drawString("-------------------------------------", 10, y);
+                y += yShift;
+                g2d.drawString(" Balance   :                 " + change.getText() + "   ", 10, y);
+                y += yShift;
 
-                g2d.drawString("*************************************",10,y);y+=yShift;
-                g2d.drawString("       THANK YOU COME AGAIN            ",10,y);y+=yShift;
-                g2d.drawString("*************************************",10,y);y+=yShift;
-                g2d.drawString("       SOFTWARE BY:MONTERDEV          ",10,y);y+=yShift;
-                g2d.drawString("   CONTACT: daniel@monterdev.com       ",10,y);y+=yShift;
+                g2d.drawString("*************************************", 10, y);
+                y += yShift;
+                g2d.drawString("       THANK YOU COME AGAIN            ", 10, y);
+                y += yShift;
+                g2d.drawString("*************************************", 10, y);
+                y += yShift;
+                g2d.drawString("       SOFTWARE BY:MONTERDEV          ", 10, y);
+                y += yShift;
+                g2d.drawString("   CONTACT: daniel@monterdev.com       ", 10, y);
+                y += yShift;
 
 
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

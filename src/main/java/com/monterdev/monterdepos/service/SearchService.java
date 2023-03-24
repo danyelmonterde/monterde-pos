@@ -1,6 +1,6 @@
 package com.monterdev.monterdepos.service;
 
-import com.monterdev.monterdepos.dao.DashboardDao;
+import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.model.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +14,7 @@ public class SearchService extends DescriptionService {
 
     private ObservableList<String> listOfItems;
 
-    private DashboardDao dashboardDao;
+    private ItemDao itemDao;
 
     @FXML
     public void searchItemFromItemList(KeyEvent e) {
@@ -31,8 +31,8 @@ public class SearchService extends DescriptionService {
 
         listOfItems = FXCollections.observableArrayList();
 
-        dashboardDao = DashboardDao.getInstance();
-        List<Item> itemList = dashboardDao.getItems(super.searchItem.getText());
+        itemDao = ItemDao.getInstance();
+        List<Item> itemList = itemDao.getItems(super.searchItem.getText());
         itemList.stream().forEach(s -> {
             listOfItems.add(s.getItemCode());
 
