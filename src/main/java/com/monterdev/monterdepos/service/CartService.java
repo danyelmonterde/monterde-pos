@@ -278,36 +278,38 @@ public class CartService extends DashboardComponents implements Printable {
             double width = pf.getImageableWidth();
             g2d.translate((int) pf.getImageableX(), (int) pf.getImageableY());
 
-
+                    //x=9,y=4
+            //width=594
             //  FontMetrics metrics=g2d.getFontMetrics(new Font("Arial",Font.BOLD,7));
 
             try {
-                int y = 20;
-                int yShift = 10;
-                int headerRectHeight = 15;
+                int y = 30;
+                int yShift = 15;
+                int headerRectHeight = 40;
+                int x=5;
                 // int headerRectHeighta=40;
 
 
-                g2d.setFont(new Font("Ubuntu", Font.PLAIN, 9));
+                g2d.setFont(new Font("AGENCY FB", Font.TRUETYPE_FONT, 14));
                 //g2d.drawImage(icon.getImage(), 50, 20, 90, 30, rootPane);y+=yShift+30;
-                g2d.drawString("-------------------------------------", 12, y);
+                g2d.drawString("-----------------------------------------------", x, y);
                 y += yShift;
-                g2d.drawString("         Alen Cai Grocery Store        ", 12, y);
+                g2d.drawString("         ALEN CAI GROCERY STORE        ", x, y);
                 y += yShift;
-                g2d.drawString("   Jaguar corner Coronet Street ", 12, y);
+                g2d.drawString("   JAGUAR CORNER CORONET STREET ", x, y);
                 y += yShift;
-                g2d.drawString("   Fairview Quezon City ", 12, y);
+                g2d.drawString("   FAIRVIEW QUEZON CITY ", x, y);
                 y += yShift;
-                g2d.drawString("   www.facebook.com/AlenCaiStore ", 12, y);
+                g2d.drawString("   WWW.FACEBOOK.COM/ACMONTERDESTORE ", x, y);
                 y += yShift;
-                g2d.drawString("        +639182281576      ", 12, y);
+                g2d.drawString("        +639182281576      ", x, y);
                 y += yShift;
-                g2d.drawString("-------------------------------------", 12, y);
+                g2d.drawString("----------------------------------------------------", x, y);
                 y += headerRectHeight;
 
-                g2d.drawString(" Item Name                  Price   ", 10, y);
+                g2d.drawString(" ITEM NAME                  PRICE   ", x, y);
                 y += yShift;
-                g2d.drawString("-------------------------------------", 10, y);
+                g2d.drawString("----------------------------------------------------", x, y);
                 y += headerRectHeight;
 
 
@@ -316,34 +318,34 @@ public class CartService extends DashboardComponents implements Printable {
 
                     Item item = itemDao.getItemByItemCode(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[0]);
                     double sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]);
-                    g2d.drawString(" " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1] + "                            ", 10, y);
+                    g2d.drawString(" " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1].toUpperCase() + "                            ", x, y);
                     y += yShift;
-                    g2d.drawString("      " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2] + " * " + item.getAverageCost(), 10, y);
+                    g2d.drawString("      " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2].toUpperCase() + " * " + item.getAverageCost(), x, y);
                     g2d.drawString(String.valueOf(sumOfItemsInCart), 160, y);
                     y += yShift;
                 }
-                g2d.drawString("-------------------------------------", 10, y);
+                g2d.drawString("----------------------------------------------------", x, y);
                 y += yShift;
-                g2d.drawString(" Total amount:               " + grandTotal.getText() + "   ", 10, y);
+                g2d.drawString(" TOTAL AMOUNT:               " + grandTotal.getText() + "   ", x, y);
                 y += yShift;
-                g2d.drawString("-------------------------------------", 10, y);
+                g2d.drawString("----------------------------------------------------", x, y);
                 y += yShift;
-                g2d.drawString(" Cash      :                 " + amountPaid.getText() + "   ", 10, y);
+                g2d.drawString(" CASH      :                 " + amountPaid.getText() + "   ", x, y);
                 y += yShift;
-                g2d.drawString("-------------------------------------", 10, y);
+                g2d.drawString("----------------------------------------------------", x, y);
                 y += yShift;
-                g2d.drawString(" Balance   :                 " + change.getText() + "   ", 10, y);
+                g2d.drawString(" BALANCE   :                 " + change.getText() + "   ", x, y);
                 y += yShift;
 
-                g2d.drawString("*************************************", 10, y);
+                g2d.drawString("*************************************", x, y);
+                y += headerRectHeight;
+                g2d.drawString("       THANK YOU COME AGAIN            ", x, y);
                 y += yShift;
-                g2d.drawString("       THANK YOU COME AGAIN            ", 10, y);
+                g2d.drawString("*************************************", x, y);
+                y += headerRectHeight;
+                g2d.drawString("       SOFTWARE BY:MONTERDEV          ", x, y);
                 y += yShift;
-                g2d.drawString("*************************************", 10, y);
-                y += yShift;
-                g2d.drawString("       SOFTWARE BY:MONTERDEV          ", 10, y);
-                y += yShift;
-                g2d.drawString("   CONTACT: daniel@monterdev.com       ", 10, y);
+                g2d.drawString("   CONTACT: DANIEL@MONTERDEV.COM       ", x, y);
                 y += yShift;
 
 
