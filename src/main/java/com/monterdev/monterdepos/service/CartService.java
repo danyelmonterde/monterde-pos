@@ -246,24 +246,25 @@ public class CartService extends DashboardComponents implements Printable {
 
     @FXML
     private void printReceipt() {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(this);
-        boolean ok = job.printDialog();
-        if (ok) {
-            try {
-                job.print();
-            } catch (PrinterException ex) {
-                LOGGER.error(new POSException("Error printing", ex.getCause()));
-            }
-        }else{
-            Prompt.success("No receipt will be printed!");
-        }
+//        PrinterJob job = PrinterJob.getPrinterJob();
+//        job.setPrintable(this);
+//        boolean ok = job.printDialog();
+//        if (ok) {
+//            try {
+//                job.print();
+//            } catch (PrinterException ex) {
+//                LOGGER.error(new POSException("Error printing", ex.getCause()));
+//            }
+//        }else{
+//            Prompt.success("No receipt will be printed!");
+//        }
     }
 
     private void resetTransaction() {
         grandTotal.setText("0");
         amountPaid.setText("0");
         change.setText("0");
+        total =0;
     }
 
     @Override
