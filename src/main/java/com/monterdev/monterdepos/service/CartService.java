@@ -9,6 +9,7 @@ import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Sales;
 import com.monterdev.monterdepos.model.SalesTransaction;
 import com.monterdev.monterdepos.util.Prompt;
+import com.monterdev.monterdepos.util.ReceiptPrinter;
 import com.monterdev.monterdepos.util.TransactionNumberGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,18 +21,18 @@ import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.print.PageFormat;
-import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class CartService extends DashboardComponents implements Printable {
+import static com.monterdev.monterdepos.constants.POSSymbols.CART_TEXT_SEPARATOR;
+import static com.monterdev.monterdepos.constants.POSSymbols.CART_TEXT_SEPARATOR_REGEX;
+
+public class CartService extends DashboardComponents  {
 
     private ObservableSet<String> itemsOnCartSet = FXCollections.observableSet();
     private static final String PCS = " PCS";
@@ -41,10 +42,7 @@ public class CartService extends DashboardComponents implements Printable {
     private static final String NO_STOCK_AVAILABLE = "sorry there's no stock available";
     private static final String ITEM_ADDED_TO_CART = "ok. item added to cart";
     private static final String ITEM_REMOVED_FROM_CART = "Item removed from cart";
-    private static final String CART_TEXT_SEPARATOR = "|";
-    private static final String CART_TEXT_SEPARATOR_REGEX = "\\|";
     private static final String NOT_A_NUMBER = "Input quantity is not a number";
-    private static final int NOT_A_NUMBER_ERROR_CODE = 2001;
 
     private ItemDao itemDao;
 
@@ -221,7 +219,7 @@ public class CartService extends DashboardComponents implements Printable {
                     salesTransactionDao.saveSalesTransaction(salesTransaction);
 
 
-                    LOGGER.info("Item and Sales salesTransaction was saved!");
+                    LOGGER.info("Item and Sales Transaction was saved!");
                 });
                 double grandTotal = priceOfItemsInCart.stream()
                         .reduce(0.0, Double::sum);
@@ -246,18 +244,7 @@ public class CartService extends DashboardComponents implements Printable {
 
     @FXML
     private void printReceipt() {
-//        PrinterJob job = PrinterJob.getPrinterJob();
-//        job.setPrintable(this);
-//        boolean ok = job.printDialog();
-//        if (ok) {
-//            try {
-//                job.print();
-//            } catch (PrinterException ex) {
-//                LOGGER.error(new POSException("Error printing", ex.getCause()));
-//            }
-//        }else{
-//            Prompt.success("No receipt will be printed!");
-//        }
+        ReceiptPrinter.getInstance().printReceipt();
     }
 
     private void resetTransaction() {
@@ -267,95 +254,5 @@ public class CartService extends DashboardComponents implements Printable {
         total =0;
     }
 
-    @Override
-    public int print(Graphics g, PageFormat pf, int page) throws
-            PrinterException {
-        int r = cart.getItems().size();
-        // ImageIcon icon=new ImageIcon("C:UsersccsDocumentsNetBeansProjectsvideo TestPOSInvoicesrcposinvoicemylogo.jpg");
-        int result = NO_SUCH_PAGE;
-        if (page == 0) {
 
-            Graphics2D g2d = (Graphics2D) g;
-            double width = pf.getImageableWidth();
-            g2d.translate((int) pf.getImageableX(), (int) pf.getImageableY());
-
-                    //x=9,y=4
-            //width=594
-            //  FontMetrics metrics=g2d.getFontMetrics(new Font("Arial",Font.BOLD,7));
-
-            try {
-                int y = 30;
-                int yShift = 15;
-                int headerRectHeight = 40;
-                int x=5;
-                // int headerRectHeighta=40;
-
-
-                g2d.setFont(new Font("AGENCY FB", Font.TRUETYPE_FONT, 14));
-                //g2d.drawImage(icon.getImage(), 50, 20, 90, 30, rootPane);y+=yShift+30;
-                g2d.drawString("-----------------------------------------------", x, y);
-                y += yShift;
-                g2d.drawString("         ALEN CAI GROCERY STORE        ", x, y);
-                y += yShift;
-                g2d.drawString("   JAGUAR CORNER CORONET STREET ", x, y);
-                y += yShift;
-                g2d.drawString("   FAIRVIEW QUEZON CITY ", x, y);
-                y += yShift;
-                g2d.drawString("   WWW.FACEBOOK.COM/ACMONTERDESTORE ", x, y);
-                y += yShift;
-                g2d.drawString("        +639182281576      ", x, y);
-                y += yShift;
-                g2d.drawString("----------------------------------------------------", x, y);
-                y += headerRectHeight;
-
-                g2d.drawString(" ITEM NAME                  PRICE   ", x, y);
-                y += yShift;
-                g2d.drawString("----------------------------------------------------", x, y);
-                y += headerRectHeight;
-
-
-                for (int s = 0; s < r; s++) {
-                    itemDao = ItemDao.getInstance();
-
-                    Item item = itemDao.getItemByItemCode(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[0]);
-                    double sumOfItemsInCart = item.getAverageCost() * Integer.parseInt(cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2]);
-                    g2d.drawString(" " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[1].toUpperCase() + "                            ", x, y);
-                    y += yShift;
-                    g2d.drawString("      " + cart.getItems().get(s).toString().split(CART_TEXT_SEPARATOR_REGEX)[2].toUpperCase() + " * " + item.getAverageCost(), x, y);
-                    g2d.drawString(String.valueOf(sumOfItemsInCart), 160, y);
-                    y += yShift;
-                }
-                g2d.drawString("----------------------------------------------------", x, y);
-                y += yShift;
-                g2d.drawString(" TOTAL AMOUNT:               " + grandTotal.getText() + "   ", x, y);
-                y += yShift;
-                g2d.drawString("----------------------------------------------------", x, y);
-                y += yShift;
-                g2d.drawString(" CASH      :                 " + amountPaid.getText() + "   ", x, y);
-                y += yShift;
-                g2d.drawString("----------------------------------------------------", x, y);
-                y += yShift;
-                g2d.drawString(" BALANCE   :                 " + change.getText() + "   ", x, y);
-                y += yShift;
-
-                g2d.drawString("*************************************", x, y);
-                y += headerRectHeight;
-                g2d.drawString("       THANK YOU COME AGAIN            ", x, y);
-                y += yShift;
-                g2d.drawString("*************************************", x, y);
-                y += headerRectHeight;
-                g2d.drawString("       SOFTWARE BY:MONTERDEV          ", x, y);
-                y += yShift;
-                g2d.drawString("   CONTACT: DANIEL@MONTERDEV.COM       ", x, y);
-                y += yShift;
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            result = PAGE_EXISTS;
-        }
-        return result;
-    }
 }
