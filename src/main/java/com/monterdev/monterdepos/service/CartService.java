@@ -21,29 +21,22 @@ import javafx.scene.input.KeyEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.*;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.monterdev.monterdepos.constants.CartLogs.*;
 import static com.monterdev.monterdepos.constants.POSSymbols.CART_TEXT_SEPARATOR;
 import static com.monterdev.monterdepos.constants.POSSymbols.CART_TEXT_SEPARATOR_REGEX;
 
-public class CartService extends DashboardComponents  {
+public class CartService extends DashboardComponents {
 
     private ObservableSet<String> itemsOnCartSet = FXCollections.observableSet();
     private static final String PCS = " PCS";
     private static final Logger LOGGER = LogManager.getLogger(CartService.class);
     private int selectedIndex = 0;
     private double total = 0.0;
-    private static final String NO_STOCK_AVAILABLE = "sorry there's no stock available";
-    private static final String ITEM_ADDED_TO_CART = "ok. item added to cart";
-    private static final String ITEM_REMOVED_FROM_CART = "Item removed from cart";
-    private static final String NOT_A_NUMBER = "Input quantity is not a number";
-
     private ItemDao itemDao;
 
     private SalesTransactionDao salesTransactionDao;
@@ -187,7 +180,7 @@ public class CartService extends DashboardComponents  {
 
         Optional<ButtonType> transactConfirmation = Prompt.confirm("Are you sure you want to continue?");
         if (transactConfirmation.isPresent()) {
-            if(transactConfirmation.get().getText().equals("OK")){
+            if (transactConfirmation.get().getText().equals("OK")) {
                 printReceipt();
                 SalesTransaction systemSalesTransaction = new SalesTransaction();
                 String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
@@ -251,7 +244,7 @@ public class CartService extends DashboardComponents  {
         grandTotal.setText("0");
         amountPaid.setText("0");
         change.setText("0");
-        total =0;
+        total = 0;
     }
 
 

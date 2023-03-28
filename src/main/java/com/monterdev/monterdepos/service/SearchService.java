@@ -1,13 +1,18 @@
 package com.monterdev.monterdepos.service;
 
+import com.monterdev.monterdepos.MainApplication;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.model.Item;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SearchService extends DescriptionService {
@@ -48,6 +53,16 @@ public class SearchService extends DescriptionService {
         }
 
 
+    }
+
+    @FXML
+    public void openAddItemMenu() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/AddItem.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 782, 390);
+        Stage stage = new Stage();
+        stage.setTitle("Add or Edit Item");
+        stage.setScene(scene);
+        stage.show();
     }
 
 }

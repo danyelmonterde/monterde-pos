@@ -23,8 +23,8 @@ public class Purchase {
     @Column(name = "transaction_number")
     private String transactionNumber;
 
-    @Column(name = "item_name")
-    private String itemName;
+    @Column(name = "item_code")
+    private String itemCode;
 
     @Column(name = "cost")
     private double cost;

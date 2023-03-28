@@ -2,10 +2,7 @@ package com.monterdev.monterdepos.components;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class DashboardComponents {
 
@@ -39,5 +36,8 @@ public class DashboardComponents {
     protected JFXButton btnAddItem;
     @FXML
     protected JFXButton btnCancelItem;
+
+    @FXML
+    protected MenuItem AddItemMenu;
 
 }
