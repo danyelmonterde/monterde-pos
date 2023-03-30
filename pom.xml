@@ -132,6 +132,11 @@
             <version>1.18.26</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -152,20 +157,41 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.projectlombok</groupId>-->
+<!--                <artifactId>lombok-maven-plugin</artifactId>-->
+<!--                <version>1.18.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>generate-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>delombok</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <encoding>UTF-8</encoding>-->
+<!--                            <addOutputDirectory>false</addOutputDirectory>-->
+<!--                            <sourceDirectory>src/main/java</sourceDirectory>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.0.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <phase>package</phase>
                         <goals>
-                            <goal>delombok</goal>
+                            <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <encoding>UTF-8</encoding>
-                            <addOutputDirectory>false</addOutputDirectory>
-                            <sourceDirectory>src/main/java</sourceDirectory>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.monterdev.monterdepos.SuperMain</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>
@@ -179,7 +205,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.monterdev.monterdepos/com.monterdev.monterdepos.MainApplication</mainClass>
+                            <mainClass>com.monterdev.monterdepos/com.monterdev.monterdepos.SuperMain</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

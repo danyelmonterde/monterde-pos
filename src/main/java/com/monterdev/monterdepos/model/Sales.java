@@ -18,6 +18,7 @@ import lombok.Setter;
 public class Sales{
 
     @Id
+    @Column(name = "id")
     private int id;
 
     @Column(name = "transaction_number")

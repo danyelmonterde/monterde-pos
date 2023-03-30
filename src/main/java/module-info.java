@@ -15,6 +15,7 @@ module com.monterdev.monterdepos {
     requires org.apache.logging.log4j;
     requires lombok;
     requires java.desktop;
+    requires org.apache.commons.lang3;
 
 
     opens com.monterdev.monterdepos to javafx.fxml;

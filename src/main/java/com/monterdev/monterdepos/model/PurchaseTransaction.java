@@ -20,6 +20,7 @@ import java.util.Date;
 public class PurchaseTransaction {
 
     @Id
+    @Column(name = "transaction_number")
     private String transactionNumber;
 
     @Column(name = "grand_total")
@@ -37,6 +38,4 @@ public class PurchaseTransaction {
     @Column(name = "date_transacted")
     private Date dateTransacted;
 
-    @Column(name = "date_bought_from_supplier")
-    private Date dateBoughtFromSupplier;
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,6 +20,7 @@ import lombok.Setter;
 public class Purchase {
 
     @Id
+    @Column(name = "id")
     private int id;
 
     @Column(name = "transaction_number")
@@ -34,5 +37,8 @@ public class Purchase {
 
     @Column(name = "total")
     private double total;
+
+    @Column(name = "date_bought_from_supplier")
+    private Date dateBoughtFromSupplier;
 
 }

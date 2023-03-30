@@ -18,7 +18,8 @@ public class HibernateUtil {
             try {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
-                InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream("application-" + System.getenv().get("ENV") + ".properties");
+               // InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream("application-" + System.getProperty("ENV") + ".properties");
+                InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream("application-" + "local"+ ".properties");
                 settings.load(ip);
                 configuration.setProperties(settings);
                 configuration.addAnnotatedClass(Item.class);
