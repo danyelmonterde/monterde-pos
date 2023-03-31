@@ -24,6 +24,6 @@ module com.monterdev.monterdepos {
     exports com.monterdev.monterdepos;
     exports com.monterdev.monterdepos.service;
     exports com.monterdev.monterdepos.components;
-    opens com.monterdev.monterdepos.model to org.hibernate.orm.core;
+    opens com.monterdev.monterdepos.model to org.hibernate.orm.core, javafx.base;
 
 }

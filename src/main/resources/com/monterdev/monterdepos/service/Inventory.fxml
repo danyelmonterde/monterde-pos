@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="390.0" prefWidth="782.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.InventoryService">
+<VBox prefHeight="514.0" prefWidth="782.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.InventoryService">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -57,9 +57,9 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="500.0" prefWidth="782.0" VBox.vgrow="ALWAYS">
       <children>
-            <VBox prefHeight="200.0" prefWidth="640.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <VBox prefHeight="474.0" prefWidth="782.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <Label text="LIST OF GROCERY PRODUCTS">
                      <font>
@@ -73,7 +73,7 @@
                               <Insets right="20.0" />
                            </HBox.margin>
                         </Button>
-                        <ComboBox fx:id="comboCategory" onAction="#categoryOnChange" prefWidth="150.0" promptText="ITEM CATEGORY" />
+                        <ComboBox fx:id="comboCategory" nodeOrientation="LEFT_TO_RIGHT" onAction="#categoryOnChange" prefWidth="150.0" promptText="ITEM CATEGORY" />
                         <ComboBox fx:id="comboStocks" nodeOrientation="LEFT_TO_RIGHT" onAction="#stockAvailability" prefWidth="150.0" promptText="STOCK">
                            <HBox.margin>
                               <Insets left="20.0" />
@@ -87,18 +87,21 @@
                         <Insets bottom="20.0" />
                      </padding>
                   </HBox>
-                  <TableView fx:id="tblItemList" prefHeight="500.0" prefWidth="600.0">
+                  <TableView fx:id="tblItemList" prefHeight="374.0" prefWidth="742.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="ITEM CODE" />
-                      <TableColumn prefWidth="75.0" text="ITEM NAME" />
-                        <TableColumn prefWidth="75.0" text="QUANTITY" />
-                        <TableColumn prefWidth="75.0" text="ORIGINAL PRICE" />
-                        <TableColumn prefWidth="75.0" text="SELLING PRICE" />
-                        <TableColumn prefWidth="75.0" text="LOW STOCK" />
+                      <TableColumn fx:id="columnItemCode" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM CODE" />
+                      <TableColumn fx:id="columnItemName" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM NAME" />
+                        <TableColumn fx:id="columnQuantity" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="QUANTITY" />
+                        <TableColumn fx:id="columnOriginalPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ORIGINAL PRICE" />
+                        <TableColumn fx:id="columnSellingPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="SELLING PRICE" />
+                        <TableColumn fx:id="columnLowStock" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="LOW STOCK" />
                     </columns>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0">
                     <buttons>
@@ -110,12 +113,6 @@
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
-                  </ButtonBar>
-                  <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
-                    <buttons>
-                      <Button fx:id="btnNext" mnemonicParsing="false" onAction="#nextPage" text="Next Page" />
-                        <Button fx:id="btnPrevious" mnemonicParsing="false" onAction="#previousPage" text="Previous Page" />
-                    </buttons>
                   </ButtonBar>
                </children>
                <padding>

@@ -50,6 +50,7 @@ public class AddItemService extends UpdateItemService {
             Item item = itemDao.getItemByItemCode(itemCode);
             if (item != null) {
                 super.btnUpdateItem.setVisible(true);
+                super.btnDeleteItem.setVisible(true);
                 super.btnCancel.setVisible(true);
                 super.btnAddItem.setVisible(false);
                 super.itemQuantity.setDisable(true);
@@ -59,6 +60,7 @@ public class AddItemService extends UpdateItemService {
                 super.itemInStock.setText(String.valueOf(item.getInStock()));
                 super.itemLowStock.setText(String.valueOf(item.getLowStock()));
                 super.isDiscountable.setSelected(item.isDiscountable());
+                super.originalPrice.setText(String.valueOf(item.getOriginalPrice()));
                 super.itemAverageCost.setText(String.valueOf(item.getAverageCost()));
                 Category category = categoryDao.getCategoryById(item.getCategoryId());
                 super.itemCategory.getSelectionModel().select(category.getCategory());
@@ -99,6 +101,7 @@ public class AddItemService extends UpdateItemService {
             item.setItemName(super.itemName.getText());
             item.setInStock(Integer.parseInt(super.itemQuantity.getText()));
             item.setLowStock(Integer.parseInt(super.itemLowStock.getText()));
+            item.setOriginalPrice(Double.parseDouble(super.originalPrice.getText()));
             item.setAverageCost(Double.parseDouble(super.itemAverageCost.getText()));
             item.setDiscountable(super.isDiscountable.selectedProperty().get());
             item.setItemCode(super.itemCode.getText());

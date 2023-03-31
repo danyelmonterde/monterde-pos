@@ -34,6 +34,9 @@ public class Item {
     @Column(name = "low_stock")
     private int lowStock;
 
+    @Column(name = "original_price")
+    private double originalPrice;
+
     @Column(name = "average_cost")
     private double averageCost;
 

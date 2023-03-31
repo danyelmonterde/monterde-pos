@@ -36,6 +36,7 @@ public class UpdateItemService extends DeleteItemService {
         item.setItemName(super.itemName.getText());
         item.setInStock(Integer.parseInt(super.itemInStock.getText()));
         item.setLowStock(Integer.parseInt(super.itemLowStock.getText()));
+        item.setOriginalPrice(Double.parseDouble(super.originalPrice.getText()));
         item.setAverageCost(Double.parseDouble(super.itemAverageCost.getText()));
         item.setDiscountable(super.isDiscountable.selectedProperty().get());
         item.setItemCode(super.itemCode.getText());

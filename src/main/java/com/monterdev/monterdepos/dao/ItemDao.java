@@ -3,10 +3,7 @@ package com.monterdev.monterdepos.dao;
 import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -107,7 +104,11 @@ public class ItemDao {
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);
             Root<Item> root = cr.from(Item.class);
             Predicate []predicates = new Predicate[2];
-            predicates[0]=cb.equal(root.get("categoryId"),category);
+            if(category ==0){
+                predicates[0]=cb.gt(root.get("categoryId"),0);
+            }else{
+                predicates[0]=cb.equal(root.get("categoryId"),category);
+            }
             if(stockAlertType.equals(ALL_STOCKS)){
                 predicates[1]=cb.gt(root.get("inStock"),10);
             }else if(stockAlertType.equals(LOW_STOCK)){
@@ -116,11 +117,11 @@ public class ItemDao {
                 predicates[1]=cb.lt(root.get("inStock"),1);
             }
 
-
             cr.select(root).where(predicates);
             Query query = session.createQuery(cr)
                     .setFirstResult(beginIndex)
                     .setMaxResults(endIndex);
+
             itemList = query.getResultList();
 
             transaction.commit();
@@ -132,14 +133,23 @@ public class ItemDao {
         return itemList;
     }
 
-    public Item deleteItemByItemCode(String itemCode){
+    private void queryPredicates(Predicate[] predicates){
+
+    }
+
+    public void deleteItemByItemCode(String itemCode){
         Transaction transaction = null;
-        Item item = null;
+
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
 
-            item = session.get(Item.class,itemCode);
-            session.delete(item);
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+
+            CriteriaDelete<Item> criteriaDelete = cb.createCriteriaDelete(Item.class);
+            Root<Item> root = criteriaDelete.from(Item.class);
+            criteriaDelete.where(cb.equal(root.get("itemCode"), itemCode));
+
+            session.createQuery(criteriaDelete).executeUpdate();
 
             transaction.commit();
         }catch (Exception ex){
@@ -147,6 +157,6 @@ public class ItemDao {
                 transaction.rollback();
             }
         }
-        return item;
+
     }
 }

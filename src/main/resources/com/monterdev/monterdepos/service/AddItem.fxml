@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.AddItemService">
+<VBox prefHeight="400.0" prefWidth="946.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.AddItemService">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -55,7 +55,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="375.0" prefWidth="782.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="375.0" prefWidth="1026.0" VBox.vgrow="ALWAYS">
       <children>
             <TextField fx:id="itemCode" layoutX="14.0" layoutY="26.0" onKeyReleased="#searchProductCode" prefHeight="38.0" prefWidth="220.0" promptText="Scan or Type Barcode">
                <font>
@@ -102,18 +102,24 @@
             <Label layoutX="260.0" layoutY="6.0" text="SELLING PRICE" />
             <ComboBox fx:id="itemCategory" layoutX="260.0" layoutY="169.0" prefHeight="38.0" prefWidth="220.0" />
             <Label layoutX="260.0" layoutY="152.0" text="CATEGORY" />
-            <TextField fx:id="itemSupplierLocation" layoutX="511.0" layoutY="24.0" prefHeight="38.0" prefWidth="220.0" promptText="Input Supplier Location">
+            <TextField fx:id="itemSupplierLocation" layoutX="712.0" layoutY="24.0" prefHeight="38.0" prefWidth="220.0" promptText="Input Supplier Location">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <Label layoutX="511.0" layoutY="6.0" text="SUPPLIER LOCATION" />
+            <Label layoutX="712.0" layoutY="6.0" text="SUPPLIER LOCATION" />
             <Label layoutX="260.0" layoutY="220.0" text="SUPPLIER NAME" />
             <Label layoutX="263.0" layoutY="287.0" text="DATE BOUGHT FROM SUPPLIER" />
             <Button fx:id="btnAddItem" layoutX="511.0" layoutY="101.0" mnemonicParsing="false" onAction="#addItem" prefHeight="38.0" prefWidth="169.0" text="ADD ITEM" visible="false" />
             <Button fx:id="btnUpdateItem" layoutX="511.0" layoutY="169.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="38.0" prefWidth="169.0" text="UPDATE ITEM" visible="false" />
             <Button fx:id="btnDeleteItem" layoutX="511.0" layoutY="237.0" mnemonicParsing="false" onAction="#deleteItem" prefHeight="38.0" prefWidth="169.0" text="DELETE ITEM" visible="false" />
             <Button fx:id="btnCancel" layoutX="511.0" layoutY="304.0" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" prefWidth="169.0" text="CANCEL" visible="false" />
+            <TextField fx:id="originalPrice" layoutX="486.0" layoutY="23.0" prefHeight="38.0" prefWidth="220.0" promptText="Original Price">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="486.0" layoutY="5.0" text="ORIGINAL PRICE" />
       </children>
     </AnchorPane>
   </children>

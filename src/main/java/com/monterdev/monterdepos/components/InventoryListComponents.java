@@ -3,6 +3,7 @@ package com.monterdev.monterdepos.components;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class InventoryListComponents {
@@ -36,4 +37,22 @@ public class InventoryListComponents {
 
     @FXML
     protected TableView tblItemList;
+
+    @FXML
+    protected TableColumn columnItemCode;
+
+    @FXML
+    protected TableColumn columnItemName;
+
+    @FXML
+    protected TableColumn columnQuantity;
+
+    @FXML
+    protected TableColumn columnOriginalPrice;
+
+    @FXML
+    protected TableColumn columnSellingPrice;
+
+    @FXML
+    protected TableColumn columnLowStock;
 }
