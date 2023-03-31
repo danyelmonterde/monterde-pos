@@ -5,11 +5,14 @@ import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
+
+import static com.monterdev.monterdepos.constants.StockAlertTypes.*;
 
 public class ItemDao {
 
@@ -94,7 +97,7 @@ public class ItemDao {
         return itemList;
     }
 
-    public List<Item> getItemsByCategoryStockAndPaging(String category,String stockAlertType, int beginIndex, int endIndex){
+    public List<Item> getItemsByCategoryStockAndPaging(int category,String stockAlertType, int beginIndex, int endIndex){
         Transaction transaction = null;
 
         List<Item> itemList = null;
@@ -103,7 +106,18 @@ public class ItemDao {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);
             Root<Item> root = cr.from(Item.class);
-            cr.select(root).where(cb.like(root.get("itemCode"),"%"+category+"%"));
+            Predicate []predicates = new Predicate[2];
+            predicates[0]=cb.equal(root.get("categoryId"),category);
+            if(stockAlertType.equals(ALL_STOCKS)){
+                predicates[1]=cb.gt(root.get("inStock"),10);
+            }else if(stockAlertType.equals(LOW_STOCK)){
+                predicates[1]=cb.lt(root.get("inStock"),11);
+            }else if(stockAlertType.equals(NO_STOCK)){
+                predicates[1]=cb.lt(root.get("inStock"),1);
+            }
+
+
+            cr.select(root).where(predicates);
             Query query = session.createQuery(cr)
                     .setFirstResult(beginIndex)
                     .setMaxResults(endIndex);
