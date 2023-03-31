@@ -40,4 +40,9 @@ public class DashboardComponents {
     @FXML
     protected MenuItem AddItemMenu;
 
+    @FXML
+    protected MenuItem inventoryMenuItem;
+
+
+
 }

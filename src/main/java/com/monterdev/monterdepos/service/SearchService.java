@@ -37,7 +37,7 @@ public class SearchService extends DescriptionService {
         listOfItems = FXCollections.observableArrayList();
 
         itemDao = ItemDao.getInstance();
-        List<Item> itemList = itemDao.getItems(super.searchItem.getText());
+        List<Item> itemList = itemDao.getItemsByItemCode(super.searchItem.getText(),0,10);
         itemList.stream().forEach(s -> {
             listOfItems.add(s.getItemCode());
 
@@ -61,6 +61,16 @@ public class SearchService extends DescriptionService {
         Scene scene = new Scene(fxmlLoader.load(), 782, 390);
         Stage stage = new Stage();
         stage.setTitle("Add or Edit Item");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void openInventoryList() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/Inventory.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 782, 390);
+        Stage stage = new Stage();
+        stage.setTitle("Inventory List of Grocery Products");
         stage.setScene(scene);
         stage.show();
     }

@@ -70,7 +70,7 @@ public class ItemDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Item> getItems(String itemCode){
+    public List<Item> getItemsByItemCode(String itemCode, int beginIndex, int endIndex){
         Transaction transaction = null;
 
         List<Item> itemList = null;
@@ -81,8 +81,32 @@ public class ItemDao {
             Root<Item> root = cr.from(Item.class);
             cr.select(root).where(cb.like(root.get("itemCode"),"%"+itemCode+"%"));
             Query query = session.createQuery(cr)
-                    .setFirstResult(0)
-                    .setMaxResults(10);
+                    .setFirstResult(beginIndex)
+                    .setMaxResults(endIndex);
+            itemList = query.getResultList();
+
+            transaction.commit();
+        }catch (Exception ex){
+            if(transaction!= null){
+                transaction.rollback();
+            }
+        }
+        return itemList;
+    }
+
+    public List<Item> getItemsByCategoryStockAndPaging(String category,String stockAlertType, int beginIndex, int endIndex){
+        Transaction transaction = null;
+
+        List<Item> itemList = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Item> cr = cb.createQuery(Item.class);
+            Root<Item> root = cr.from(Item.class);
+            cr.select(root).where(cb.like(root.get("itemCode"),"%"+category+"%"));
+            Query query = session.createQuery(cr)
+                    .setFirstResult(beginIndex)
+                    .setMaxResults(endIndex);
             itemList = query.getResultList();
 
             transaction.commit();
