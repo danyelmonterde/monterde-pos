@@ -79,7 +79,14 @@ public class ItemDao {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);
             Root<Item> root = cr.from(Item.class);
-            cr.select(root).where(cb.like(root.get("itemCode"),"%"+itemCode+"%"));
+
+            Predicate hasItemName = cb.like(root.get("itemName"),"%"+itemCode+"%");
+            Predicate hasItemCode = cb.like(root.get("itemCode"),"%"+itemCode+"%");
+            Predicate requiredWhereClause = cb.or(hasItemCode,hasItemName);
+
+
+            cr.select(root).where(requiredWhereClause);
+
             Query query = session.createQuery(cr)
                     .setFirstResult(beginIndex)
                     .setMaxResults(endIndex);
@@ -94,7 +101,7 @@ public class ItemDao {
         return itemList;
     }
 
-    public List<Item> getItemsByCategoryStockAndPaging(int category,String stockAlertType, int beginIndex, int endIndex){
+    public List<Item> getItemsByNameCategoryStockAndPaging(String itemName,int category, String stockAlertType, int beginIndex, int endIndex){
         Transaction transaction = null;
 
         List<Item> itemList = null;
@@ -103,21 +110,25 @@ public class ItemDao {
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);
             Root<Item> root = cr.from(Item.class);
-            Predicate []predicates = new Predicate[2];
+
+            Predicate []requiredWhereClause = new Predicate[3];
+            Predicate hasItemCode = cb.like(root.get("itemCode"),"%"+itemName+"%");
+            Predicate hasItemName = cb.like(root.get("itemName"),"%"+itemName+"%");
             if(category ==0){
-                predicates[0]=cb.gt(root.get("categoryId"),0);
+                requiredWhereClause[0]=cb.gt(root.get("categoryId"),0);
             }else{
-                predicates[0]=cb.equal(root.get("categoryId"),category);
+                requiredWhereClause[0]=cb.equal(root.get("categoryId"),category);
             }
             if(stockAlertType.equals(ALL_STOCKS)){
-                predicates[1]=cb.gt(root.get("inStock"),10);
+                requiredWhereClause[1]=cb.gt(root.get("inStock"),10);
             }else if(stockAlertType.equals(LOW_STOCK)){
-                predicates[1]=cb.lt(root.get("inStock"),11);
+                requiredWhereClause[1]=cb.lt(root.get("inStock"),11);
             }else if(stockAlertType.equals(NO_STOCK)){
-                predicates[1]=cb.lt(root.get("inStock"),1);
+                requiredWhereClause[1]=cb.lt(root.get("inStock"),1);
             }
+            requiredWhereClause[2] = cb.or(hasItemCode,hasItemName);
 
-            cr.select(root).where(predicates);
+            cr.select(root).where(requiredWhereClause);
             Query query = session.createQuery(cr)
                     .setFirstResult(beginIndex)
                     .setMaxResults(endIndex);

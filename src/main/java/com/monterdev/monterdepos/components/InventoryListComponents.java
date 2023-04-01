@@ -1,10 +1,7 @@
 package com.monterdev.monterdepos.components;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 public class InventoryListComponents {
 
@@ -55,4 +52,7 @@ public class InventoryListComponents {
 
     @FXML
     protected TableColumn columnLowStock;
+
+    @FXML
+    protected TextField txtSearchItem;
 }

@@ -97,6 +97,6 @@ public class ItemComponents {
 
     @FXML
     private void quantityOnly(KeyEvent keyEvent) {
-        itemQuantity.setText(StringUtil.numbersOnly(itemQuantity.getText()));
+
     }
 }

@@ -53,6 +53,8 @@ public class AddItemService extends UpdateItemService {
                 super.btnDeleteItem.setVisible(true);
                 super.btnCancel.setVisible(true);
                 super.btnAddItem.setVisible(false);
+
+                enableFields();
                 super.itemQuantity.setDisable(true);
                 super.itemCode.setDisable(true);
 
@@ -78,6 +80,7 @@ public class AddItemService extends UpdateItemService {
                 clearFields();
                 super.btnAddItem.setVisible(true);
                 super.itemName.requestFocus();
+                enableFields();
                 super.itemInStock.setDisable(true);
             }
         }
@@ -144,13 +147,14 @@ public class AddItemService extends UpdateItemService {
     @FXML
     private void cancel() {
         super.itemCode.setText("");
+        disableFields();
         super.itemCode.setDisable(false);
         super.itemCode.requestFocus();
         clearFields();
-        enableFields();
         btnAddItem.setVisible(false);
         btnUpdateItem.setVisible(false);
         btnCancel.setVisible(false);
+        btnDeleteItem.setVisible(false);
     }
 
 

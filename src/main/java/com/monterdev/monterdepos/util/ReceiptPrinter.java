@@ -4,6 +4,7 @@ import com.monterdev.monterdepos.components.DashboardComponents;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.service.CartService;
 import javafx.print.*;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,9 +63,9 @@ public class ReceiptPrinter extends DashboardComponents {
             System.out.println("Printing to " + ps);
             DocPrintJob docPrintJob = ps.createPrintJob();
 
-//            InputStream fin = ReceiptPrinter.class.getClassLoader().getResourceAsStream("passport-daniel.jpg");
+
             InputStream fin = null;
-            // fin = new FileInputStream();
+
             fin = ReceiptPrinter.class.getClassLoader().getResourceAsStream("passport-daniel.jpg");
             Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.GIF, null);
             try {

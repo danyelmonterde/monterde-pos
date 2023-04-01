@@ -16,6 +16,7 @@ module com.monterdev.monterdepos {
     requires lombok;
     requires java.desktop;
     requires org.apache.commons.lang3;
+    requires poi;
 
 
     opens com.monterdev.monterdepos to javafx.fxml;

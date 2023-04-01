@@ -75,10 +75,11 @@ public class UpdateItemService extends DeleteItemService {
         clearFields();
         super.itemCode.setText("");
         super.itemCode.requestFocus();
+        disableFields();
+        btnDeleteItem.setVisible(false);
         super.itemCode.setDisable(false);
         super.btnUpdateItem.setVisible(false);
         super.btnCancel.setVisible(false);
-        super.itemQuantity.setDisable(false);
 
     }
 
