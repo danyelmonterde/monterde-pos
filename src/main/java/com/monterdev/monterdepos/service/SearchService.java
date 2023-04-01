@@ -58,7 +58,7 @@ public class SearchService extends DescriptionService {
     @FXML
     public void openAddItemMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/AddItem.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 782, 390);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 390);
         Stage stage = new Stage();
         stage.setTitle("Add or Edit Item");
         stage.setScene(scene);
@@ -68,7 +68,7 @@ public class SearchService extends DescriptionService {
     @FXML
     public void openInventoryList() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/Inventory.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 782, 390);
+        Scene scene = new Scene(fxmlLoader.load(), 782, 500);
         Stage stage = new Stage();
         stage.setTitle("Inventory List of Grocery Products");
         stage.setScene(scene);

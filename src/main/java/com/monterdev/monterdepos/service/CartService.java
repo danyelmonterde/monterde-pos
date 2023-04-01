@@ -1,5 +1,6 @@
 package com.monterdev.monterdepos.service;
 
+import com.monterdev.monterdepos.MainApplication;
 import com.monterdev.monterdepos.components.DashboardComponents;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.dao.SalesTransactionDao;
@@ -15,12 +16,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -236,7 +241,7 @@ public class CartService extends DashboardComponents {
     }
 
     @FXML
-    private void printReceipt() {
+    private void printReceipt()  {
         ReceiptPrinter.getInstance().printReceipt();
     }
 

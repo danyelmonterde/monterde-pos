@@ -1,5 +1,6 @@
 package com.monterdev.monterdepos.dao;
 
+import com.monterdev.monterdepos.constants.CategoryTypes;
 import com.monterdev.monterdepos.model.Category;
 import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.util.HibernateUtil;
@@ -72,6 +73,7 @@ public class CategoryDao {
     }
 
     public Category getCategoryByName(String categoryName) {
+
         Transaction transaction = null;
         Category category = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

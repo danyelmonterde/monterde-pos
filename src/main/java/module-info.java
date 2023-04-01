@@ -16,6 +16,7 @@ module com.monterdev.monterdepos {
     requires lombok;
     requires java.desktop;
     requires org.apache.commons.lang3;
+    requires poi;
 
 
     opens com.monterdev.monterdepos to javafx.fxml;
@@ -24,6 +25,6 @@ module com.monterdev.monterdepos {
     exports com.monterdev.monterdepos;
     exports com.monterdev.monterdepos.service;
     exports com.monterdev.monterdepos.components;
-    opens com.monterdev.monterdepos.model to org.hibernate.orm.core;
+    opens com.monterdev.monterdepos.model to org.hibernate.orm.core, javafx.base;
 
 }
