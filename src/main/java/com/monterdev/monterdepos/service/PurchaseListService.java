@@ -236,7 +236,7 @@ public class PurchaseListService extends PurchaseListComponents implements Initi
         String strDate = dateFormat.format(date);
         Properties properties = new Properties();
         properties.load(InventoryService.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
-        try (OutputStream fileOut = new FileOutputStream(properties.getProperty("inventory.report.location") + strDate.replaceAll("\\s+", "") + "-purchase" + ".xls")) {
+        try (OutputStream fileOut = new FileOutputStream(System.getProperty("user.home") + "/Desktop/"+ strDate.replaceAll("\\s+", "") + "-purchase" + ".xls")) {
             workbook.write(fileOut);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

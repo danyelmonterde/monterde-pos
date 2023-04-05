@@ -276,7 +276,7 @@ public class InventoryService extends InventoryListComponents implements Initial
         String strDate = dateFormat.format(date);
         Properties properties = new Properties();
         properties.load(InventoryService.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
-        try (OutputStream fileOut = new FileOutputStream(properties.getProperty("inventory.report.location") + strDate.replaceAll("\\s+", "") + ".xls")) {
+        try (OutputStream fileOut = new FileOutputStream(System.getProperty("user.home") + "/Desktop/" + strDate.replaceAll("\\s+", "") + ".xls")) {
             workbook.write(fileOut);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
