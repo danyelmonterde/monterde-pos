@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -13,17 +13,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="514.0" prefWidth="782.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.InventoryService">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="500.0" prefWidth="782.0" VBox.vgrow="ALWAYS">
-      <children>
+<VBox prefHeight="514.0" prefWidth="782.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.PurchaseListService">
+   <children>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="500.0" prefWidth="782.0" VBox.vgrow="ALWAYS">
+         <children>
             <VBox prefHeight="474.0" prefWidth="782.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Label text="LIST OF GROCERY PRODUCTS">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Label>
+                  <AnchorPane prefHeight="67.0" prefWidth="742.0">
+                     <children>
+                        <Label prefWidth="214.0" text="LIST OF PURCHASED PRODUCTS">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                   <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="btnExport" mnemonicParsing="false" onAction="#exportItems" text="Export">
@@ -31,13 +35,17 @@
                               <Insets right="20.0" />
                            </HBox.margin>
                         </Button>
-                        <ComboBox fx:id="comboCategory" nodeOrientation="LEFT_TO_RIGHT" onAction="#categoryOnChange" prefWidth="150.0" promptText="ITEM CATEGORY" />
-                        <ComboBox fx:id="comboStocks" nodeOrientation="LEFT_TO_RIGHT" onAction="#stockAvailability" prefWidth="150.0" promptText="STOCK">
+                        <DatePicker fx:id="dateUntil" nodeOrientation="LEFT_TO_RIGHT" onAction="#setTablePurchaseList" promptText="UNTIL">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
-                        </ComboBox>
-                        <TextField fx:id="txtSearchItem" nodeOrientation="LEFT_TO_RIGHT" onKeyReleased="#searchItemByName" prefHeight="25.0" prefWidth="297.0" promptText="SEARCH BARCODE OR ITEM NAME">
+                        </DatePicker>
+                        <DatePicker fx:id="dateFrom" nodeOrientation="LEFT_TO_RIGHT" onAction="#setTablePurchaseList" promptText="FROM">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </DatePicker>
+                        <TextField fx:id="txtSearchTransaction" nodeOrientation="LEFT_TO_RIGHT" onKeyReleased="#searchByTransactionNumber" prefHeight="25.0" prefWidth="297.0" promptText="ITEM CODE OR TRANSACTION NUMBER">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>
@@ -53,15 +61,15 @@
                         <Insets bottom="20.0" />
                      </padding>
                   </HBox>
-                  <TableView fx:id="tblItemList" prefHeight="374.0" prefWidth="742.0">
-                    <columns>
-                      <TableColumn fx:id="columnItemCode" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM CODE" />
-                      <TableColumn fx:id="columnItemName" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM NAME" />
+                  <TableView fx:id="tblPurchaseList" prefHeight="374.0" prefWidth="742.0">
+                     <columns>
+                        <TableColumn fx:id="columnTransactionNumber" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="TRANSACTION NUMBER" />
+                        <TableColumn fx:id="columnItemCode" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM CODE" />
+                        <TableColumn fx:id="columnCost" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="COST" />
                         <TableColumn fx:id="columnQuantity" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="QUANTITY" />
-                        <TableColumn fx:id="columnOriginalPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ORIGINAL PRICE" />
-                        <TableColumn fx:id="columnSellingPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="SELLING PRICE" />
-                        <TableColumn fx:id="columnLowStock" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="LOW STOCK" />
-                    </columns>
+                        <TableColumn fx:id="columnTotal" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="TOTAL" />
+                        <TableColumn fx:id="columnDateBought" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="DATE BOUGHT FROM SUPPLIER" />
+                     </columns>
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -70,12 +78,12 @@
                      </columnResizePolicy>
                   </TableView>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                    <buttons>
-                      <Button fx:id="btnTen" mnemonicParsing="false" onAction="#tenRows" text="10" />
+                     <buttons>
+                        <Button fx:id="btnTen" mnemonicParsing="false" onAction="#tenRows" text="10" />
                         <Button fx:id="btnFifty" mnemonicParsing="false" onAction="#fiftyRows" text="50" />
                         <Button fx:id="btnHundred" mnemonicParsing="false" onAction="#hundredRows" text="100" />
                         <Button fx:id="btnThousand" mnemonicParsing="false" onAction="#thousandRows" text="10000" />
-                    </buttons>
+                     </buttons>
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
@@ -85,7 +93,7 @@
                   <Insets left="20.0" right="20.0" top="20.0" />
                </padding>
             </VBox>
-      </children>
-    </AnchorPane>
-  </children>
+         </children>
+      </AnchorPane>
+   </children>
 </VBox>

@@ -1,9 +1,8 @@
 package com.monterdev.monterdepos.service;
 
-import com.monterdev.monterdepos.MainApplication;
 import com.monterdev.monterdepos.components.DashboardComponents;
 import com.monterdev.monterdepos.dao.ItemDao;
-import com.monterdev.monterdepos.dao.SalesTransactionDao;
+import com.monterdev.monterdepos.dao.SalesDao;
 import com.monterdev.monterdepos.dao.TransactionDao;
 import com.monterdev.monterdepos.exception.POSException;
 import com.monterdev.monterdepos.model.Item;
@@ -16,16 +15,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +39,7 @@ public class CartService extends DashboardComponents {
     private double total = 0.0;
     private ItemDao itemDao;
 
-    private SalesTransactionDao salesTransactionDao;
+    private SalesDao salesDao;
 
     private TransactionDao transactionDao;
 
@@ -186,7 +181,7 @@ public class CartService extends DashboardComponents {
         Optional<ButtonType> transactConfirmation = Prompt.confirm("Are you sure you want to continue?");
         if (transactConfirmation.isPresent()) {
             if (transactConfirmation.get().getText().equals("OK")) {
-                printReceipt();
+                //printReceipt();
                 SalesTransaction systemSalesTransaction = new SalesTransaction();
                 String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
                 systemSalesTransaction.setTransactionNumber(transactionNumber);
@@ -212,9 +207,10 @@ public class CartService extends DashboardComponents {
                     salesTransaction.setItemName(item.getItemName());
                     salesTransaction.setQuantity(Integer.parseInt(item_quantity));
                     salesTransaction.setPrice(item.getAverageCost());
-                    salesTransactionDao = SalesTransactionDao.getInstance();
+                    salesTransaction.setDateTransacted(new Date());
+                    salesDao = SalesDao.getInstance();
                     salesTransaction.setTransactionNumber(systemSalesTransaction.getTransactionNumber());
-                    salesTransactionDao.saveSalesTransaction(salesTransaction);
+                    salesDao.saveSalesTransaction(salesTransaction);
 
 
                     LOGGER.info("Item and Sales Transaction was saved!");
@@ -241,7 +237,7 @@ public class CartService extends DashboardComponents {
     }
 
     @FXML
-    private void printReceipt()  {
+    private void printReceipt() {
         ReceiptPrinter.getInstance().printReceipt();
     }
 

@@ -30,7 +30,7 @@ import static com.monterdev.monterdepos.constants.ConfigFile.CONFIG_FILE_NAME;
 public class InventoryService extends InventoryListComponents implements Initializable {
 
     private int BEGIN_INDEX = 0; //Initial number of rows per page
-    private int END_INDEX = 10000; //Initial number of rows per page
+    private int END_INDEX = 10; //Initial number of rows per page
     private static String SELECTED_CATEGORY = CategoryTypes.ALL_CATEGORY;
     private static String SELECTED_STOCK_ALERT = StockAlertTypes.ALL_STOCKS;
 
@@ -119,7 +119,7 @@ public class InventoryService extends InventoryListComponents implements Initial
 
     @FXML
     private void thousandRows() {
-        END_INDEX = 1000;
+        END_INDEX = 10000;
         setTableItem();
     }
 

@@ -4,14 +4,14 @@ import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Purchase;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.CriteriaUpdate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.Date;
 import java.util.List;
+
+import static com.monterdev.monterdepos.constants.StockAlertTypes.*;
 
 public class PurchaseDao {
 
@@ -80,6 +80,38 @@ public class PurchaseDao {
                     .setFirstResult(0)
                     .setMaxResults(10);
             purchaseList = query.getResultList();
+            transaction.commit();
+        }catch (Exception ex){
+            if(transaction!= null){
+                transaction.rollback();
+            }
+        }
+        return purchaseList;
+    }
+
+    public List<Purchase> getPurchaseByTransactionNumberCategoryDateAndPaging(String transactionNumber, Date dateFrom,Date dateUntil, int beginIndex, int endIndex){
+        Transaction transaction = null;
+
+        List<Purchase> purchaseList = null;
+        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Purchase> cr = cb.createQuery(Purchase.class);
+            Root<Purchase> root = cr.from(Purchase.class);
+
+
+            Predicate hasItemCode = cb.equal(root.get("itemCode"),transactionNumber);
+            Predicate hasItemName = cb.equal(root.get("transactionNumber"),transactionNumber);
+            Predicate dateBoughtFromSupplier =cb.between(root.get("dateBoughtFromSupplier"),dateFrom,dateUntil);
+            Predicate finalWhereClause = cb.or(hasItemCode,hasItemName,dateBoughtFromSupplier);
+
+            cr.select(root).where(finalWhereClause);
+            Query query = session.createQuery(cr)
+                    .setFirstResult(beginIndex)
+                    .setMaxResults(endIndex);
+
+            purchaseList = query.getResultList();
+
             transaction.commit();
         }catch (Exception ex){
             if(transaction!= null){

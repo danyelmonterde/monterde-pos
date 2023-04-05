@@ -88,59 +88,64 @@ public class AddItemService extends UpdateItemService {
 
     @FXML
     private void addItem() {
-        itemDao = ItemDao.getInstance();
-        purchaseDao = PurchaseDao.getInstance();
-        purchaseTransactionDao = PurchaseTransactionDao.getInstance();
+        try{
+            itemDao = ItemDao.getInstance();
+            purchaseDao = PurchaseDao.getInstance();
+            purchaseTransactionDao = PurchaseTransactionDao.getInstance();
 
-        String itemCode = super.itemCode.getText();
-        Item itemResult = itemDao.getItemByItemCode(itemCode);
-        if(itemResult!=null){
-            super.itemInStock.setDisable(false);
-            Prompt.success("Item is already existing!");
-        }else{
-            super.itemInStock.setDisable(true);
+            String itemCode = super.itemCode.getText();
+            Item itemResult = itemDao.getItemByItemCode(itemCode);
+            if(itemResult!=null){
+                super.itemInStock.setDisable(false);
+                Prompt.success("Item is already existing!");
+            }else{
+                super.itemInStock.setDisable(true);
 
-            Item item = new Item();
-            item.setItemName(super.itemName.getText());
-            item.setInStock(Integer.parseInt(super.itemQuantity.getText()));
-            item.setLowStock(Integer.parseInt(super.itemLowStock.getText()));
-            item.setOriginalPrice(Double.parseDouble(super.originalPrice.getText()));
-            item.setAverageCost(Double.parseDouble(super.itemAverageCost.getText()));
-            item.setDiscountable(super.isDiscountable.selectedProperty().get());
-            item.setItemCode(super.itemCode.getText());
+                Item item = new Item();
+                item.setItemName(super.itemName.getText());
+                item.setInStock(Integer.parseInt(super.itemQuantity.getText()));
+                item.setLowStock(Integer.parseInt(super.itemLowStock.getText()));
+                item.setOriginalPrice(Double.parseDouble(super.originalPrice.getText()));
+                item.setAverageCost(Double.parseDouble(super.itemAverageCost.getText()));
+                item.setDiscountable(super.isDiscountable.selectedProperty().get());
+                item.setItemCode(super.itemCode.getText());
 
-            Category category = categoryDao.getCategoryByName(String.valueOf(super.itemCategory.getSelectionModel().getSelectedItem()));
-            item.setCategoryId(category.getId());
+                Category category = categoryDao.getCategoryByName(String.valueOf(super.itemCategory.getSelectionModel().getSelectedItem()));
+                item.setCategoryId(category.getId());
 
 
-            Purchase purchase = new Purchase();
-            purchase.setCost(Double.parseDouble(super.itemAverageCost.getText()));
-            purchase.setItemCode(super.itemCode.getText());
-            int quantity  = Integer.parseInt(super.itemQuantity.getText());
-            double cost = Double.parseDouble(super.itemAverageCost.getText());
-            purchase.setTotal(quantity * cost);
-            purchase.setQuantity(quantity);
-            purchase.setDateBoughtFromSupplier(Date.from(super.dateBoughtFromSupplier.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-            String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
-            purchase.setTransactionNumber(transactionNumber);
+                Purchase purchase = new Purchase();
+                purchase.setCost(Double.parseDouble(super.itemAverageCost.getText()));
+                purchase.setItemCode(super.itemCode.getText());
+                int quantity  = Integer.parseInt(super.itemQuantity.getText());
+                double cost = Double.parseDouble(super.itemAverageCost.getText());
+                purchase.setTotal(quantity * cost);
+                purchase.setQuantity(quantity);
+                purchase.setDateBoughtFromSupplier(Date.from(super.dateBoughtFromSupplier.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
+                purchase.setTransactionNumber(transactionNumber);
 
-            PurchaseTransaction purchaseTransaction = new PurchaseTransaction();
-            purchaseTransaction.setGrandTotal(quantity * cost);
-            purchaseTransaction.setTotalItems(quantity);
-            purchaseTransaction.setSupplier(super.itemSupplierName.getText());
-            purchaseTransaction.setSupplierLocation(super.itemSupplierLocation.getText());
-            purchaseTransaction.setDateTransacted(new Date());
-            purchaseTransaction.setTransactionNumber(transactionNumber);
+                PurchaseTransaction purchaseTransaction = new PurchaseTransaction();
+                purchaseTransaction.setGrandTotal(quantity * cost);
+                purchaseTransaction.setTotalItems(quantity);
+                purchaseTransaction.setSupplier(super.itemSupplierName.getText());
+                purchaseTransaction.setSupplierLocation(super.itemSupplierLocation.getText());
+                purchaseTransaction.setDateTransacted(new Date());
+                purchaseTransaction.setTransactionNumber(transactionNumber);
 
-            itemDao.saveItem(item);
-            purchaseDao.savePurchase(purchase);
-            purchaseTransactionDao.savePurchaseTransaction(purchaseTransaction);
+                itemDao.saveItem(item);
+                purchaseDao.savePurchase(purchase);
+                purchaseTransactionDao.savePurchaseTransaction(purchaseTransaction);
 
-            Prompt.success("Product was saved!");
-            clearFields();
-            super.itemCode.setText("");
-            super.btnAddItem.setVisible(false);
+                Prompt.success("Product was saved!");
+                clearFields();
+                super.itemCode.setText("");
+                super.btnAddItem.setVisible(false);
+            }
+        }catch (Exception e){
+            btnAddItem.setVisible(false);
         }
+
     }
 
 

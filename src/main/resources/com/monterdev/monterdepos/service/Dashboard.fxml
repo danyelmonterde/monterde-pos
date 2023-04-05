@@ -26,6 +26,8 @@
           <items>
             <MenuItem fx:id="AddItemMenu" mnemonicParsing="false" onAction="#openAddItemMenu" text="Add/Edit Item" />
             <MenuItem fx:id="inventoryMenuItem" mnemonicParsing="false" onAction="#openInventoryList" text="View Inventory" />
+                  <MenuItem fx:id="inventoryMenuItem1" mnemonicParsing="false" onAction="#openPurchaseList" text="View Purchase List" />
+                  <MenuItem fx:id="inventoryMenuItem2" mnemonicParsing="false" onAction="#openSalesList" text="View Sales List" />
           </items>
         </Menu>
       </menus>

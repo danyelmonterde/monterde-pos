@@ -75,4 +75,24 @@ public class SearchService extends DescriptionService {
         stage.show();
     }
 
+    @FXML
+    public void openPurchaseList() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/PurchaseList.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 782, 500);
+        Stage stage = new Stage();
+        stage.setTitle("Inventory List of Grocery Products");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void openSalesList() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/SalesList.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 782, 500);
+        Stage stage = new Stage();
+        stage.setTitle("Purchase List");
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

@@ -3,14 +3,16 @@ package com.monterdev.monterdepos.components;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-public class InventoryListComponents {
+public class SalesListComponents {
 
     @FXML
-    protected ComboBox comboStocks;
-
+    protected TextField txtSearchTransaction;
     @FXML
     protected ComboBox comboCategory;
-
+    @FXML
+    protected DatePicker dateFrom;
+    @FXML
+    protected DatePicker dateUntil;
     @FXML
     protected Button btnExport;
 
@@ -26,26 +28,25 @@ public class InventoryListComponents {
     @FXML
     protected Button btnThousand;
     @FXML
-    protected TableView tblItemList;
+    protected TableView tblSalesList;
 
     @FXML
-    protected TableColumn columnItemCode;
+    protected TableColumn columnTransactionNumber;
 
     @FXML
     protected TableColumn columnItemName;
 
     @FXML
+    protected TableColumn columnPrice;
+
+    @FXML
     protected TableColumn columnQuantity;
 
     @FXML
-    protected TableColumn columnOriginalPrice;
+    protected TableColumn columnTotal;
 
     @FXML
-    protected TableColumn columnSellingPrice;
+    protected TableColumn dateSold;
 
-    @FXML
-    protected TableColumn columnLowStock;
 
-    @FXML
-    protected TextField txtSearchItem;
 }
