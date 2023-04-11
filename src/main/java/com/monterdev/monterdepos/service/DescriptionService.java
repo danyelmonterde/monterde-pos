@@ -14,6 +14,10 @@ public class DescriptionService extends CartService {
 
     @FXML
     public void searchItemByItemCode() {
+        quantity.setDisable(false);
+        btnAddItem.setVisible(true);
+        btnCancelItem.setVisible(true);
+        quantity.setVisible(true);
         quantity.requestFocus();
         String selectedItemCode = String.valueOf(itemListView.getSelectionModel().getSelectedItem());
         itemCode.setText(selectedItemCode);

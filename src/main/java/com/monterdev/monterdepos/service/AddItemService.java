@@ -8,20 +8,24 @@ import com.monterdev.monterdepos.model.Category;
 import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Purchase;
 import com.monterdev.monterdepos.model.PurchaseTransaction;
+import com.monterdev.monterdepos.util.ExpirationTagGenerator;
 import com.monterdev.monterdepos.util.Prompt;
 import com.monterdev.monterdepos.util.StringUtil;
 import com.monterdev.monterdepos.util.TransactionNumberGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.net.URL;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class AddItemService extends UpdateItemService {
+public class AddItemService extends UpdateItemService implements Initializable {
 
     private ItemDao itemDao;
 
@@ -53,6 +57,8 @@ public class AddItemService extends UpdateItemService {
                 super.btnDeleteItem.setVisible(true);
                 super.btnCancel.setVisible(true);
                 super.btnAddItem.setVisible(false);
+                super.radioExistingItem.setSelected(true);
+                super.radioNewItem.setSelected(false);
 
                 enableFields();
                 super.itemQuantity.setDisable(true);
@@ -78,27 +84,35 @@ public class AddItemService extends UpdateItemService {
 
             }else if(!StringUtil.cleanString(super.itemCode.getText()).isEmpty()){
                 clearFields();
+                super.radioNewItem.setSelected(true);
+                super.radioExistingItem.setSelected(false);
                 super.btnAddItem.setVisible(true);
-                super.itemName.requestFocus();
                 enableFields();
                 super.itemInStock.setDisable(true);
+                super.itemName.requestFocus();
             }
+        }else if(super.itemCode.getText().isEmpty()){
+            disableFields();
+            clearFields();
+            btnAddItem.setVisible(false);
+            super.itemCode.setDisable(false);
         }
     }
 
     @FXML
     private void addItem() {
         try{
-            itemDao = ItemDao.getInstance();
-            purchaseDao = PurchaseDao.getInstance();
-            purchaseTransactionDao = PurchaseTransactionDao.getInstance();
+            if(!itemCode.getText().isEmpty()
+                    && !itemName.getText().isEmpty()
+                    && !itemQuantity.getText().isEmpty()
+                    && !itemLowStock.getText().isEmpty()
+                    && !itemAverageCost.getText().isEmpty()
+                    && !originalPrice.getText().isEmpty()){
 
-            String itemCode = super.itemCode.getText();
-            Item itemResult = itemDao.getItemByItemCode(itemCode);
-            if(itemResult!=null){
-                super.itemInStock.setDisable(false);
-                Prompt.success("Item is already existing!");
-            }else{
+                itemDao = ItemDao.getInstance();
+                purchaseDao = PurchaseDao.getInstance();
+                purchaseTransactionDao = PurchaseTransactionDao.getInstance();
+
                 super.itemInStock.setDisable(true);
 
                 Item item = new Item();
@@ -139,9 +153,14 @@ public class AddItemService extends UpdateItemService {
 
                 Prompt.success("Product was saved!");
                 clearFields();
+                disableFields();
+                itemCode.setDisable(false);
                 super.itemCode.setText("");
                 super.btnAddItem.setVisible(false);
+            }else{
+                Prompt.failed("Please fill in all fields!");
             }
+
         }catch (Exception e){
             btnAddItem.setVisible(false);
         }
@@ -163,6 +182,9 @@ public class AddItemService extends UpdateItemService {
     }
 
 
-
-
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        String x = ExpirationTagGenerator.generateExpirationTag();
+        System.out.println("Expiration Tag Number: "+ x);
+    }
 }

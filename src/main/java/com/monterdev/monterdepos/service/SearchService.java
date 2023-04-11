@@ -56,6 +56,21 @@ public class SearchService extends DescriptionService {
     }
 
     @FXML
+    public void cancelItem(){
+        itemName.setText("");
+        itemCode.setText("");
+        averageCost.setText("");
+        quantity.setText("");
+        inStock.setText("");
+        lowStock.setText("");
+        searchItem.setText("");
+        btnAddItem.setVisible(false);
+        btnCancelItem.setVisible(false);
+        quantity.setVisible(false);
+        searchItem.requestFocus();
+    }
+
+    @FXML
     public void openAddItemMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/AddItem.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 390);
@@ -72,6 +87,7 @@ public class SearchService extends DescriptionService {
         Stage stage = new Stage();
         stage.setTitle("Inventory List of Grocery Products");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -80,7 +96,8 @@ public class SearchService extends DescriptionService {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/PurchaseList.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 782, 500);
         Stage stage = new Stage();
-        stage.setTitle("Inventory List of Grocery Products");
+        stage.setTitle("Inventory List of Purchased Products");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
@@ -90,7 +107,8 @@ public class SearchService extends DescriptionService {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/SalesList.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 782, 500);
         Stage stage = new Stage();
-        stage.setTitle("Purchase List");
+        stage.setTitle("Sales List");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }

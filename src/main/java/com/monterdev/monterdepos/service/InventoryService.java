@@ -7,10 +7,14 @@ import com.monterdev.monterdepos.dao.CategoryDao;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.model.Category;
 import com.monterdev.monterdepos.model.Item;
+import com.monterdev.monterdepos.util.GUIUtils;
+import com.monterdev.monterdepos.util.Prompt;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -58,11 +62,13 @@ public class InventoryService extends InventoryListComponents implements Initial
         columnItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
         columnQuantity.setCellValueFactory(new PropertyValueFactory<>("inStock"));
         columnItemName.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+
         columnSellingPrice.setCellValueFactory(new PropertyValueFactory<>("averageCost"));
         columnLowStock.setCellValueFactory(new PropertyValueFactory<>("lowStock"));
         columnOriginalPrice.setCellValueFactory(new PropertyValueFactory<>("originalPrice"));
 
         setTableItem();
+
     }
 
     @FXML
@@ -92,11 +98,29 @@ public class InventoryService extends InventoryListComponents implements Initial
         }
         itemList = itemDao.getItemsByNameCategoryStockAndPaging(txtSearchItem.getText(), categoryId, SELECTED_STOCK_ALERT, BEGIN_INDEX, END_INDEX);
         itemObservableList = FXCollections.observableArrayList();
+        tblItemList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         itemList.stream().forEach(data -> {
             itemObservableList.add(data);
         });
 
+
         super.tblItemList.setItems(itemObservableList);
+        highlightLowStockItems();
+        GUIUtils.autoFitTable(tblItemList);
+
+    }
+
+    @FXML
+    private void highlightLowStockItems(){
+        Platform.runLater(()->{
+            tblItemList.getSelectionModel().clearSelection();
+            for(int ctr=0;ctr<itemList.size();ctr++){
+                if(itemList.get(ctr).getInStock()<=itemList.get(ctr).getLowStock()){
+                    tblItemList.getSelectionModel().select(ctr);
+                }
+            }
+            tblItemList.scrollTo(0);
+        });
     }
 
     @FXML
@@ -282,6 +306,8 @@ public class InventoryService extends InventoryListComponents implements Initial
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }finally {
+            Prompt.success("Report was saved to Desktop!");
         }
     }
 

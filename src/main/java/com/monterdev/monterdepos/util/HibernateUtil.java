@@ -20,7 +20,6 @@ public class HibernateUtil {
             try {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
-               // InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream("application-" + System.getProperty("ENV") + ".properties");
                 InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME);
                 settings.load(ip);
                 configuration.setProperties(settings);
@@ -30,6 +29,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(Purchase.class);
                 configuration.addAnnotatedClass(PurchaseTransaction.class);
                 configuration.addAnnotatedClass(Category.class);
+                configuration.addAnnotatedClass(ExpirationTag.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

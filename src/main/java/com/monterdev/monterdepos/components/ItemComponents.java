@@ -4,6 +4,7 @@ import com.monterdev.monterdepos.util.StringUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class ItemComponents {
 
@@ -55,6 +56,12 @@ public class ItemComponents {
     @FXML
     protected Button btnCancel;
 
+    @FXML
+    protected RadioButton radioNewItem;
+
+    @FXML
+    protected RadioButton radioExistingItem;
+
     protected void clearFields() {
         itemName.setText("");
         itemQuantity.setText("");
@@ -65,6 +72,8 @@ public class ItemComponents {
         isDiscountable.setSelected(false);
         itemSupplierName.setText("");
         itemSupplierLocation.setText("");
+        radioExistingItem.setSelected(false);
+        radioNewItem.setSelected(false);
     }
 
     protected void disableFields() {
@@ -97,6 +106,41 @@ public class ItemComponents {
 
     @FXML
     private void quantityOnly(KeyEvent keyEvent) {
+        if(!NumberUtils.isDigits(itemQuantity.getText())){
+            itemQuantity.setText(StringUtil.numbersOnly(itemQuantity.getText()));
+            itemQuantity.positionCaret(itemQuantity.getLength());
+        }
+    }
 
+    @FXML
+    private void lowStockOnly(KeyEvent keyEvent) {
+        if(!NumberUtils.isDigits(itemLowStock.getText())){
+            itemLowStock.setText(StringUtil.numbersOnly(itemLowStock.getText()));
+            itemLowStock.positionCaret(itemLowStock.getLength());
+        }
+    }
+
+    @FXML
+    private void inStockOnly(KeyEvent keyEvent) {
+        if(!NumberUtils.isDigits(itemInStock.getText())){
+            itemInStock.setText(StringUtil.numbersOnly(itemInStock.getText()));
+            itemInStock.positionCaret(itemInStock.getLength());
+        }
+    }
+
+    @FXML
+    private void averageCostOnly(KeyEvent keyEvent) {
+        if(!NumberUtils.isDigits(itemAverageCost.getText())){
+            itemAverageCost.setText(StringUtil.numbersOnly(itemAverageCost.getText()));
+            itemAverageCost.positionCaret(itemAverageCost.getLength());
+        }
+    }
+
+    @FXML
+    private void originalPriceOnly(KeyEvent keyEvent) {
+        if(!NumberUtils.isDigits(originalPrice.getText())){
+            originalPrice.setText(StringUtil.numbersOnly(originalPrice.getText()));
+            originalPrice.positionCaret(originalPrice.getLength());
+        }
     }
 }

@@ -120,13 +120,14 @@ public class ItemDao {
                 requiredWhereClause[0]=cb.equal(root.get("categoryId"),category);
             }
             if(stockAlertType.equals(ALL_STOCKS)){
-                requiredWhereClause[1]=cb.gt(root.get("inStock"),10);
+                requiredWhereClause[1]=cb.gt(root.get("inStock"),0);
             }else if(stockAlertType.equals(LOW_STOCK)){
                 requiredWhereClause[1]=cb.lt(root.get("inStock"),11);
             }else if(stockAlertType.equals(NO_STOCK)){
                 requiredWhereClause[1]=cb.lt(root.get("inStock"),1);
             }
             requiredWhereClause[2] = cb.or(hasItemCode,hasItemName);
+            cr.orderBy(cb.asc(root.get("inStock")));
 
             cr.select(root).where(requiredWhereClause);
             Query query = session.createQuery(cr)
@@ -142,10 +143,6 @@ public class ItemDao {
             }
         }
         return itemList;
-    }
-
-    private void queryPredicates(Predicate[] predicates){
-
     }
 
     public void deleteItemByItemCode(String itemCode){

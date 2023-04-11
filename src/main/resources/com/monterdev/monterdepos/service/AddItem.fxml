@@ -30,22 +30,22 @@
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="itemLowStock" disable="true" layoutX="14.0" layoutY="237.0" prefHeight="38.0" prefWidth="220.0" promptText="Low Stock Notification">
+            <TextField fx:id="itemLowStock" disable="true" layoutX="14.0" layoutY="237.0" onKeyTyped="#lowStockOnly" prefHeight="38.0" prefWidth="220.0" promptText="Low Stock Notification">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="itemInStock" disable="true" layoutX="14.0" layoutY="309.0" prefHeight="38.0" prefWidth="220.0" promptText="Item in Stock">
+            <TextField fx:id="itemInStock" disable="true" layoutX="14.0" layoutY="309.0" onKeyTyped="#inStockOnly" prefHeight="38.0" prefWidth="220.0" promptText="Item in Stock">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="itemAverageCost" disable="true" layoutX="260.0" layoutY="24.0" prefHeight="38.0" prefWidth="220.0" promptText="Average Cost">
+            <TextField fx:id="itemAverageCost" disable="true" layoutX="260.0" layoutY="24.0" onKeyTyped="#averageCostOnly" prefHeight="38.0" prefWidth="220.0" promptText="Average Cost">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <RadioButton fx:id="isDiscountable" disable="true" layoutX="500.0" layoutY="111.0" mnemonicParsing="false" style="-fx-font-size: 14;" text="DISCOUNTABLE" />
+            <RadioButton fx:id="isDiscountable" disable="true" layoutX="506.0" layoutY="109.0" mnemonicParsing="false" style="-fx-font-size: 14;" text="DISCOUNTABLE" />
             <TextField fx:id="itemSupplierName" disable="true" layoutX="260.0" layoutY="237.0" prefHeight="38.0" prefWidth="220.0" promptText="Input Supplier Name">
                <font>
                   <Font size="14.0" />
@@ -53,31 +53,41 @@
             </TextField>
             <DatePicker fx:id="dateBoughtFromSupplier" disable="true" layoutX="260.0" layoutY="309.0" prefHeight="38.0" prefWidth="220.0" promptText="Date Bought" />
             <Label layoutX="14.0" layoutY="6.0" style="-fx-font-size: 14;" text="PRODUCT CODE / BARCODE" />
-            <Label layoutX="14.0" layoutY="83.0" style="-fx-font-size: 14;" text="ITEM NAME" />
-            <Label layoutX="14.0" layoutY="152.0" style="-fx-font-size: 14;" text="QUANTITY" />
-            <Label layoutX="14.0" layoutY="220.0" style="-fx-font-size: 14;" text="LOW STOCK" />
+            <Label layoutX="14.0" layoutY="81.0" style="-fx-font-size: 14;" text="ITEM NAME" />
+            <Label layoutX="14.0" layoutY="150.0" style="-fx-font-size: 14;" text="QUANTITY" />
+            <Label layoutX="14.0" layoutY="218.0" style="-fx-font-size: 14;" text="LOW STOCK" />
             <Label layoutX="14.0" layoutY="287.0" style="-fx-font-size: 14;" text="IN STOCK" />
             <Label layoutX="260.0" layoutY="6.0" style="-fx-font-size: 14;" text="SELLING PRICE" />
             <ComboBox fx:id="itemCategory" disable="true" layoutX="260.0" layoutY="169.0" prefHeight="38.0" prefWidth="220.0" />
-            <Label layoutX="260.0" layoutY="152.0" style="-fx-font-size: 14;" text="CATEGORY" />
+            <Label layoutX="260.0" layoutY="150.0" style="-fx-font-size: 14;" text="CATEGORY" />
             <TextField fx:id="itemSupplierLocation" disable="true" layoutX="745.0" layoutY="25.0" prefHeight="38.0" prefWidth="220.0" promptText="Input Supplier Location">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
             <Label layoutX="745.0" layoutY="6.0" style="-fx-font-size: 14;" text="SUPPLIER LOCATION" />
-            <Label layoutX="260.0" layoutY="220.0" style="-fx-font-size: 14;" text="SUPPLIER NAME" />
+            <Label layoutX="260.0" layoutY="218.0" style="-fx-font-size: 14;" text="SUPPLIER NAME" />
             <Label layoutX="263.0" layoutY="287.0" style="-fx-font-size: 14;" text="DATE BOUGHT FROM SUPPLIER" />
             <Button fx:id="btnAddItem" layoutX="745.0" layoutY="103.0" mnemonicParsing="false" onAction="#addItem" prefHeight="38.0" prefWidth="220.0" style="-fx-font-size: 14;" text="ADD ITEM" visible="false" />
             <Button fx:id="btnUpdateItem" layoutX="745.0" layoutY="164.0" mnemonicParsing="false" onAction="#updateItem" prefHeight="38.0" prefWidth="220.0" style="-fx-font-size: 14;" text="UPDATE ITEM" visible="false" />
             <Button fx:id="btnDeleteItem" layoutX="745.0" layoutY="232.0" mnemonicParsing="false" onAction="#deleteItem" prefHeight="38.0" prefWidth="220.0" style="-fx-font-size: 14;" text="DELETE ITEM" visible="false" />
             <Button fx:id="btnCancel" layoutX="745.0" layoutY="299.0" mnemonicParsing="false" onAction="#cancel" prefHeight="38.0" prefWidth="220.0" style="-fx-font-size: 14;" text="CANCEL" visible="false" />
-            <TextField fx:id="originalPrice" disable="true" layoutX="500.0" layoutY="24.0" prefHeight="38.0" prefWidth="220.0" promptText="Original Price">
+            <TextField fx:id="originalPrice" disable="true" layoutX="500.0" layoutY="24.0" onKeyTyped="#originalPriceOnly" prefHeight="38.0" prefWidth="220.0" promptText="Original Price">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
             <Label layoutX="500.0" layoutY="6.0" style="-fx-font-size: 14;" text="ORIGINAL PRICE" />
+            <RadioButton fx:id="radioNewItem" disable="true" layoutX="506.0" layoutY="178.0" mnemonicParsing="false" text="NEW ITEM">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="radioExistingItem" disable="true" layoutX="505.0" layoutY="244.0" mnemonicParsing="false" text="EXISTING ITEM">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </RadioButton>
       </children>
          <VBox.margin>
             <Insets top="20.0" />

@@ -10,6 +10,7 @@ import com.monterdev.monterdepos.model.Sales;
 import com.monterdev.monterdepos.model.SalesTransaction;
 import com.monterdev.monterdepos.util.Prompt;
 import com.monterdev.monterdepos.util.ReceiptPrinter;
+import com.monterdev.monterdepos.util.StringUtil;
 import com.monterdev.monterdepos.util.TransactionNumberGenerator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,12 +48,15 @@ public class CartService extends DashboardComponents {
 
     @FXML
     public void addItemToCart() {
-
+        quantity.setDisable(true);
+        btnAddItem.setVisible(false);
+        btnCancelItem.setVisible(false);
+        amountPaid.setDisable(false);
         ObservableList<String> itemsOnCartArrayList = FXCollections.observableArrayList();
         try {
             if (inStock.getText() == "0" || (Integer.parseInt(quantity.getText()) > Integer.parseInt(inStock.getText()))) {
                 LOGGER.error(NO_STOCK_AVAILABLE);
-            } else {
+            } else if(Integer.parseInt(quantity.getText())>0){
                 List<String> itemCodesInSet = new ArrayList<>();
                 itemsOnCartSet.stream().forEach(data -> {
                     itemCodesInSet.add(data.split(CART_TEXT_SEPARATOR_REGEX)[0]);
@@ -70,6 +75,11 @@ public class CartService extends DashboardComponents {
                     resetSelectedItem();
                 }
 
+            }else{
+                quantity.setDisable(false);
+                btnAddItem.setVisible(true);
+                btnCancelItem.setVisible(true);
+                Prompt.failed("Enter quantity greater than 0!");
             }
         } catch (NumberFormatException emptyQuantity) {
             LOGGER.error(new POSException(NOT_A_NUMBER, emptyQuantity.getCause()));
@@ -77,9 +87,18 @@ public class CartService extends DashboardComponents {
 
     }
 
+    private void disableAmountPaidIfCartIsEmpty(){
+        if(cart.getItems().size()==0){
+            amountPaid.setDisable(true);
+        }
+    }
+
     @FXML
     public void selectedItemFromCart(KeyEvent e) {
         try {
+            quantity.setDisable(false);
+            btnAddItem.setVisible(true);
+            btnCancelItem.setVisible(true);
             selectedIndex = cart.getSelectionModel().getSelectedIndex();
             String selectedText = (String) cart.getSelectionModel().getSelectedItem();
             String itemCode = selectedText.split(CART_TEXT_SEPARATOR_REGEX)[0];
@@ -87,8 +106,17 @@ public class CartService extends DashboardComponents {
             itemDao = ItemDao.getInstance();
             Item item = itemDao.getItemByItemCode(itemCode);
             if (e.getCode() == KeyCode.DELETE && (!cart.getItems().isEmpty())) {
+
                 //REMOVE ITEM FROM CART AND DEDUCT FROM TOTAL
+                super.quantity.setVisible(true);
                 cart.getItems().remove(selectedIndex);
+                disableAmountPaidIfCartIsEmpty();
+                if(cart.getItems().size()==0){
+                    searchItem.requestFocus();
+                    super.quantity.setVisible(false);
+                    btnAddItem.setVisible(false);
+                    btnCancelItem.setVisible(false);
+                }
                 itemsOnCartSet.remove(selectedText);
                 total -= (item.getAverageCost() * Integer.parseInt(quantity));
                 super.grandTotal.setText(String.valueOf(total));
@@ -96,10 +124,12 @@ public class CartService extends DashboardComponents {
                 LOGGER.info(ITEM_REMOVED_FROM_CART);
             } else if (e.getCode() == KeyCode.ENTER) {
                 //UPDATE SELECTED ITEM TO DESCRIPTION CONTAINER, REMOVE IT FROM CART AND DEDUCT IT FROM TOTAL
+                super.quantity.setVisible(true);
                 super.quantity.requestFocus();
                 cart.getItems().remove(selectedIndex);
+                disableAmountPaidIfCartIsEmpty();
                 itemsOnCartSet.remove(selectedText);
-                total -= item.getAverageCost();
+                total -= (item.getAverageCost() * Integer.parseInt(quantity));
                 super.change.setText("0");
                 super.grandTotal.setText(String.valueOf(total));
                 super.itemCode.setText(itemCode);
@@ -110,10 +140,17 @@ public class CartService extends DashboardComponents {
                 super.averageCost.setText(String.valueOf(item.getAverageCost()));
             } else if (e.getCode() == KeyCode.ESCAPE) {
                 searchItem.requestFocus();
+                super.quantity.setVisible(false);
+                btnCancelItem.setVisible(false);
+                btnAddItem.setVisible(false);
                 super.amountPaid.setText("0");
                 super.change.setText("0");
             } else if (e.getCode() == KeyCode.END) {
+                super.quantity.setVisible(false);
+                btnCancelItem.setVisible(false);
+                btnAddItem.setVisible(false);
                 amountPaid.requestFocus();
+
             }
         } catch (NullPointerException n) {
             LOGGER.error(new POSException(n.getMessage(), n.getCause()));
@@ -123,6 +160,10 @@ public class CartService extends DashboardComponents {
 
     @FXML
     public void computeForChange(KeyEvent e) {
+        if(!NumberUtils.isDigits(amountPaid.getText())){
+            amountPaid.setText(StringUtil.numbersOnly(amountPaid.getText()));
+            amountPaid.positionCaret(amountPaid.getLength());
+        }
         double grandTotal = Double.parseDouble(super.grandTotal.getText());
         double amountPaid = Double.parseDouble(super.amountPaid.getText());
         double change = amountPaid - grandTotal;
@@ -134,6 +175,9 @@ public class CartService extends DashboardComponents {
         } else if (e.getCode() == KeyCode.CONTROL) {
             quantity.requestFocus();
         } else if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.HOME) {
+            btnAddItem.setVisible(false);
+            btnCancelItem.setVisible(false);
+            super.quantity.setVisible(false);
             super.change.setText("0");
             super.amountPaid.setText("0");
             cart.requestFocus();
@@ -145,6 +189,10 @@ public class CartService extends DashboardComponents {
     @FXML
     public void enterItemToCartFromQuantity(KeyEvent e) {
         try {
+            if(!NumberUtils.isDigits(quantity.getText())){
+                quantity.setText(StringUtil.numbersOnly(quantity.getText()));
+                quantity.positionCaret(quantity.getLength());
+            }
             if (e.getCode() == KeyCode.ENTER && (Integer.parseInt(quantity.getText()) > 0)) {
                 addItemToCart();
             } else if (e.getCode() == KeyCode.ESCAPE) {
@@ -231,6 +279,10 @@ public class CartService extends DashboardComponents {
                 resetTransaction();
                 searchItem.requestFocus();
                 Prompt.success("Thank you for buying!");
+                btnAddItem.setVisible(false);
+                btnCancelItem.setVisible(false);
+                amountPaid.setDisable(true);
+                quantity.setDisable(true);
             }
 
         }

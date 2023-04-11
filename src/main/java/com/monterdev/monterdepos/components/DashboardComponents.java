@@ -1,8 +1,10 @@
 package com.monterdev.monterdepos.components;
 
 import com.jfoenix.controls.JFXButton;
+import com.monterdev.monterdepos.util.StringUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class DashboardComponents {
 
@@ -42,6 +44,8 @@ public class DashboardComponents {
 
     @FXML
     protected MenuItem inventoryMenuItem;
+
+
 
 
 

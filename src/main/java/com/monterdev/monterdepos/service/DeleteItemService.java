@@ -2,7 +2,6 @@ package com.monterdev.monterdepos.service;
 
 import com.monterdev.monterdepos.components.ItemComponents;
 import com.monterdev.monterdepos.dao.ItemDao;
-import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.util.Prompt;
 import javafx.fxml.FXML;
 

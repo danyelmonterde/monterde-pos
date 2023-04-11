@@ -44,11 +44,11 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
               </textFill>
             </Label>
-                  <TextField fx:id="searchItem" layoutX="11.0" layoutY="41.0" onKeyReleased="#searchItemFromItemList" prefHeight="25.0" prefWidth="200.0">
+                  <TextField fx:id="searchItem" layoutX="11.0" layoutY="41.0" onKeyReleased="#searchItemFromItemList" prefHeight="44.0" prefWidth="249.0">
                      <font>
                         <Font size="20.0" />
                      </font></TextField>
-                  <ListView fx:id="itemListView" layoutX="11.0" layoutY="104.0" onMouseClicked="#searchItemByItemCode" prefHeight="422.0" prefWidth="200.0" style="-fx-font-size: 20;" styleClass="list-cell" />
+                  <ListView fx:id="itemListView" layoutX="11.0" layoutY="104.0" onMouseClicked="#searchItemByItemCode" prefHeight="422.0" prefWidth="249.0" style="-fx-font-size: 20;" styleClass="list-cell" />
           </children>
         </AnchorPane>
         <ScrollPane prefHeight="550.0" prefWidth="244.0">
@@ -84,12 +84,12 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="itemCode" layoutX="164.0" layoutY="104.0" prefHeight="30.0" prefWidth="165.0">
+                        <Label fx:id="itemCode" layoutX="124.0" layoutY="104.0" prefHeight="30.0" prefWidth="355.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="itemName" layoutX="164.0" layoutY="160.0" prefHeight="30.0" prefWidth="315.0">
+                        <Label fx:id="itemName" layoutX="124.0" layoutY="160.0" prefHeight="30.0" prefWidth="392.0">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -109,7 +109,7 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <JFXButton fx:id="btnCancelItem" buttonType="RAISED" layoutX="215.0" layoutY="490.0" prefHeight="45.0" prefWidth="68.0" style="-fx-background-color: red;" text="Cancel" textFill="WHITE">
+                        <JFXButton fx:id="btnCancelItem" buttonType="RAISED" layoutX="215.0" layoutY="490.0" onAction="#cancelItem" prefHeight="45.0" prefWidth="68.0" style="-fx-background-color: red;" text="Cancel" textFill="WHITE" visible="false">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -119,12 +119,12 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <JFXButton fx:id="btnAddItem" layoutX="100.0" layoutY="491.0" onAction="#addItemToCart" prefHeight="45.0" prefWidth="68.0" style="-fx-background-color: green;" text="Add" textFill="WHITE">
+                        <JFXButton fx:id="btnAddItem" layoutX="100.0" layoutY="491.0" onAction="#addItemToCart" prefHeight="45.0" prefWidth="68.0" style="-fx-background-color: green;" text="Add" textFill="WHITE" visible="false">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </JFXButton>
-                        <TextField fx:id="quantity" layoutX="164.0" layoutY="273.0" onKeyReleased="#enterItemToCartFromQuantity" prefHeight="44.0" prefWidth="138.0" text="0">
+                        <TextField fx:id="quantity" disable="true" layoutX="164.0" layoutY="273.0" onKeyReleased="#enterItemToCartFromQuantity" prefHeight="44.0" prefWidth="138.0" text="0">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -157,7 +157,7 @@
                         <Font size="20.0" />
                      </font>
                   </CheckBox>
-                  <JFXButton fx:id="btnReceipt" layoutX="264.0" layoutY="505.0" onAction="#printReceipt" style="-fx-background-color: black;" text="Receipt" textFill="WHITE">
+                  <JFXButton fx:id="btnReceipt" layoutX="264.0" layoutY="505.0" onAction="#printReceipt" style="-fx-background-color: black;" text="Receipt" textFill="WHITE" visible="false">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -166,7 +166,7 @@
                      <font>
                         <Font size="20.0" />
                      </font></TextField>
-                  <TextField fx:id="amountPaid" layoutX="129.0" layoutY="453.0" onKeyReleased="#computeForChange" text="0">
+                  <TextField fx:id="amountPaid" disable="true" layoutX="129.0" layoutY="453.0" onKeyReleased="#computeForChange" text="0">
                      <font>
                         <Font size="20.0" />
                      </font></TextField>

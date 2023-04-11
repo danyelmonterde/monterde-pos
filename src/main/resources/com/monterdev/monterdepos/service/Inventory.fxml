@@ -53,14 +53,14 @@
                         <Insets bottom="20.0" />
                      </padding>
                   </HBox>
-                  <TableView fx:id="tblItemList" prefHeight="374.0" prefWidth="742.0">
+                  <TableView fx:id="tblItemList" focusTraversable="false" onMouseClicked="#highlightLowStockItems" prefHeight="374.0" prefWidth="742.0" style="-fx-selection-bar-non-focused: #0099cc;">
                     <columns>
-                      <TableColumn fx:id="columnItemCode" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM CODE" />
-                      <TableColumn fx:id="columnItemName" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM NAME" />
-                        <TableColumn fx:id="columnQuantity" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="QUANTITY" />
-                        <TableColumn fx:id="columnOriginalPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="ORIGINAL PRICE" />
-                        <TableColumn fx:id="columnSellingPrice" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="SELLING PRICE" />
-                        <TableColumn fx:id="columnLowStock" prefWidth="75.0" style="-fx-alignment: center; -fx-font-size: 14px;" text="LOW STOCK" />
+                      <TableColumn fx:id="columnItemCode" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM CODE" />
+                      <TableColumn fx:id="columnItemName" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="ITEM NAME" />
+                        <TableColumn fx:id="columnQuantity" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="QUANTITY" />
+                        <TableColumn fx:id="columnOriginalPrice" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="ORIGINAL PRICE" />
+                        <TableColumn fx:id="columnSellingPrice" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="SELLING PRICE" />
+                        <TableColumn fx:id="columnLowStock" editable="false" prefWidth="75.0" sortable="false" style="-fx-alignment: center; -fx-font-size: 14px;" text="LOW STOCK" />
                     </columns>
                      <VBox.margin>
                         <Insets />
