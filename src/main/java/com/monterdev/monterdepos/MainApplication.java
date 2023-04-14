@@ -16,6 +16,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/Dashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 640);
         stage.setTitle("Welcome to Alen Cai Grocery Store!");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }

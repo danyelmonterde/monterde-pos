@@ -7,7 +7,6 @@ import com.monterdev.monterdepos.dao.CategoryDao;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.model.Category;
 import com.monterdev.monterdepos.model.Item;
-import com.monterdev.monterdepos.util.GUIUtils;
 import com.monterdev.monterdepos.util.Prompt;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -106,7 +105,7 @@ public class InventoryService extends InventoryListComponents implements Initial
 
         super.tblItemList.setItems(itemObservableList);
         highlightLowStockItems();
-        GUIUtils.autoFitTable(tblItemList);
+
 
     }
 

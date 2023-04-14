@@ -78,16 +78,24 @@
                </font>
             </TextField>
             <Label layoutX="500.0" layoutY="6.0" style="-fx-font-size: 14;" text="ORIGINAL PRICE" />
-            <RadioButton fx:id="radioNewItem" disable="true" layoutX="506.0" layoutY="178.0" mnemonicParsing="false" text="NEW ITEM">
+            <RadioButton fx:id="radioNewItem" disable="true" layoutX="506.0" layoutY="140.0" mnemonicParsing="false" text="NEW ITEM">
                <font>
                   <Font size="14.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="radioExistingItem" disable="true" layoutX="505.0" layoutY="244.0" mnemonicParsing="false" text="EXISTING ITEM">
+            <RadioButton fx:id="radioExistingItem" disable="true" layoutX="507.0" layoutY="173.0" mnemonicParsing="false" text="EXISTING ITEM">
                <font>
                   <Font size="14.0" />
                </font>
             </RadioButton>
+            <DatePicker fx:id="itemExpirationDate" disable="true" layoutX="513.0" layoutY="310.0" prefHeight="38.0" prefWidth="220.0" promptText="EXPIRATION DATE" />
+            <Label fx:id="expirationTagDateLabel" layoutX="516.0" layoutY="288.0" style="-fx-font-size: 14;" text="ITEM EXPIRATION DATE" />
+            <TextField fx:id="expirationTagNumber" disable="true" layoutX="517.0" layoutY="240.0" prefHeight="38.0" prefWidth="220.0" promptText="EXPIRATION TAG NUMBER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label fx:id="expirationTagLabel" layoutX="517.0" layoutY="221.0" style="-fx-font-size: 14;" text="EXPIRATION TAG" />
       </children>
          <VBox.margin>
             <Insets top="20.0" />

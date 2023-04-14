@@ -31,7 +31,7 @@ public class ExpirationTagDao {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.save(expirationTag);
+            session.saveOrUpdate(expirationTag);
             transaction.commit();
         } catch (Exception ex) {
             if (transaction != null) {
@@ -40,7 +40,7 @@ public class ExpirationTagDao {
         }
     }
 
-    public ExpirationTag getExpirationTagById(int expirationTag) {
+    public ExpirationTag getExpirationTagById(String expirationTag) {
         Transaction transaction = null;
         ExpirationTag expirationTag1 = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

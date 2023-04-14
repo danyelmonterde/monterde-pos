@@ -1,10 +1,12 @@
 package com.monterdev.monterdepos.service;
 
 import com.monterdev.monterdepos.components.DashboardComponents;
+import com.monterdev.monterdepos.dao.ExpirationTagDao;
 import com.monterdev.monterdepos.dao.ItemDao;
 import com.monterdev.monterdepos.dao.SalesDao;
 import com.monterdev.monterdepos.dao.TransactionDao;
 import com.monterdev.monterdepos.exception.POSException;
+import com.monterdev.monterdepos.model.ExpirationTag;
 import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Sales;
 import com.monterdev.monterdepos.model.SalesTransaction;
@@ -23,6 +25,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -194,7 +197,16 @@ public class CartService extends DashboardComponents {
                 quantity.positionCaret(quantity.getLength());
             }
             if (e.getCode() == KeyCode.ENTER && (Integer.parseInt(quantity.getText()) > 0)) {
-                addItemToCart();
+                ExpirationTag expirationTag = ExpirationTagDao.getInstance().getExpirationTagById(expirationTagNumber.getText());
+                LocalDate currentDate = LocalDate.of(expirationTag.getDateOfExpiration().getYear(),expirationTag.getDateOfExpiration().getMonth(),expirationTag.getDateOfExpiration().getDate());
+                LocalDate currentDateMinus1Month = currentDate.minusMonths(1);
+                if(expirationTag.getDateOfExpiration().after(new Date(currentDateMinus1Month.getYear(),currentDateMinus1Month.getMonthValue(),currentDateMinus1Month.getDayOfMonth()))){
+                    Prompt.failed("Item is about to expire! Item will not be sold!");
+                    resetSelectedItem();
+                }else{
+                    addItemToCart();
+                }
+
             } else if (e.getCode() == KeyCode.ESCAPE) {
                 searchItem.requestFocus();
                 amountPaid.setText("0");
@@ -211,6 +223,7 @@ public class CartService extends DashboardComponents {
     }
 
     private void resetSelectedItem() {
+        super.expirationTagNumber.setText("");
         itemCode.setText("");
         itemName.setText("");
         averageCost.setText("");

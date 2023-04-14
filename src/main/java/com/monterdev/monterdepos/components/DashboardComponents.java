@@ -45,8 +45,7 @@ public class DashboardComponents {
     @FXML
     protected MenuItem inventoryMenuItem;
 
-
-
-
+    @FXML
+    protected TextField expirationTagNumber;
 
 }

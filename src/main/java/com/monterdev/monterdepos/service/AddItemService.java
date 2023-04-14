@@ -1,13 +1,7 @@
 package com.monterdev.monterdepos.service;
 
-import com.monterdev.monterdepos.dao.CategoryDao;
-import com.monterdev.monterdepos.dao.ItemDao;
-import com.monterdev.monterdepos.dao.PurchaseDao;
-import com.monterdev.monterdepos.dao.PurchaseTransactionDao;
-import com.monterdev.monterdepos.model.Category;
-import com.monterdev.monterdepos.model.Item;
-import com.monterdev.monterdepos.model.Purchase;
-import com.monterdev.monterdepos.model.PurchaseTransaction;
+import com.monterdev.monterdepos.dao.*;
+import com.monterdev.monterdepos.model.*;
 import com.monterdev.monterdepos.util.ExpirationTagGenerator;
 import com.monterdev.monterdepos.util.Prompt;
 import com.monterdev.monterdepos.util.StringUtil;
@@ -34,6 +28,10 @@ public class AddItemService extends UpdateItemService implements Initializable {
     private PurchaseTransactionDao purchaseTransactionDao;
 
     private CategoryDao categoryDao;
+
+    private String expirationTagNumber;
+
+    private ExpirationTagDao expirationTagDao;
 
     @FXML
     private void searchProductCode(KeyEvent keyEvent) {
@@ -63,6 +61,10 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 enableFields();
                 super.itemQuantity.setDisable(true);
                 super.itemCode.setDisable(true);
+                itemExpirationDate.setVisible(false);
+                expirationTagLabel.setVisible(false);
+                super.expirationTagNumber.setVisible(false);
+                super.expirationTagDateLabel.setVisible(false);
 
                 super.itemName.setText(item.getItemName());
                 super.itemInStock.setText(String.valueOf(item.getInStock()));
@@ -87,7 +89,13 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 super.radioNewItem.setSelected(true);
                 super.radioExistingItem.setSelected(false);
                 super.btnAddItem.setVisible(true);
+                super.expirationTagNumber.setVisible(true);
+                super.expirationTagDateLabel.setVisible(true);
+                super.expirationTagLabel.setVisible(true);
+                super.itemExpirationDate.setVisible(true);
                 enableFields();
+                super.expirationTagNumber.setText(expirationTagNumber);
+                super.expirationTagNumber.setDisable(true);
                 super.itemInStock.setDisable(true);
                 super.itemName.requestFocus();
             }
@@ -147,9 +155,16 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 purchaseTransaction.setDateTransacted(new Date());
                 purchaseTransaction.setTransactionNumber(transactionNumber);
 
+                ExpirationTag expirationTag = new ExpirationTag();
+                expirationTag.setExpirationTag(expirationTagNumber);
+                expirationTag.setDateOfExpiration(Date.from(itemExpirationDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                expirationTag.setItemCount(quantity);
+
                 itemDao.saveItem(item);
                 purchaseDao.savePurchase(purchase);
                 purchaseTransactionDao.savePurchaseTransaction(purchaseTransaction);
+                expirationTagDao.saveExpirationTag(expirationTag);
+
 
                 Prompt.success("Product was saved!");
                 clearFields();
@@ -157,6 +172,11 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 itemCode.setDisable(false);
                 super.itemCode.setText("");
                 super.btnAddItem.setVisible(false);
+                itemExpirationDate.setVisible(false);
+                super.expirationTagNumber.setVisible(false);
+                expirationTagDateLabel.setVisible(false);
+                expirationTagLabel.setVisible(false);
+                expirationTagNumber = ExpirationTagGenerator.generateExpirationTag();
             }else{
                 Prompt.failed("Please fill in all fields!");
             }
@@ -179,12 +199,13 @@ public class AddItemService extends UpdateItemService implements Initializable {
         btnUpdateItem.setVisible(false);
         btnCancel.setVisible(false);
         btnDeleteItem.setVisible(false);
+
     }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String x = ExpirationTagGenerator.generateExpirationTag();
-        System.out.println("Expiration Tag Number: "+ x);
+        expirationTagNumber = ExpirationTagGenerator.generateExpirationTag();
+        expirationTagDao = ExpirationTagDao.getInstance();
     }
 }

@@ -62,6 +62,18 @@ public class ItemComponents {
     @FXML
     protected RadioButton radioExistingItem;
 
+    @FXML
+    protected DatePicker itemExpirationDate;
+
+    @FXML
+    protected TextField expirationTagNumber;
+
+    @FXML
+    protected Label expirationTagDateLabel;
+
+    @FXML
+    protected  Label expirationTagLabel;
+
     protected void clearFields() {
         itemName.setText("");
         itemQuantity.setText("");
@@ -88,6 +100,7 @@ public class ItemComponents {
         itemSupplierName.setDisable(true);
         itemSupplierLocation.setDisable(true);
         dateBoughtFromSupplier.setDisable(true);
+        itemExpirationDate.setDisable(true);
     }
 
     protected void enableFields() {
@@ -102,6 +115,7 @@ public class ItemComponents {
         itemSupplierName.setDisable(false);
         itemSupplierLocation.setDisable(false);
         dateBoughtFromSupplier.setDisable(false);
+        itemExpirationDate.setDisable(false);
     }
 
     @FXML

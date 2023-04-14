@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.SearchService">
+<VBox prefHeight="600.0" prefWidth="1515.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monterdev.monterdepos.service.SearchService">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -59,52 +59,52 @@
                            <font>
                               <Font size="23.0" />
                            </font></Label>
-                        <Label layoutX="14.0" layoutY="160.0" text="Item Name:">
+                        <Label layoutX="17.0" layoutY="115.0" text="Item Name:">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="17.0" layoutY="104.0" text="Item Code:">
+                        <Label layoutX="20.0" layoutY="59.0" text="Item Code:">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="17.0" layoutY="320.0" text="In Stock:">
+                        <Label layoutX="20.0" layoutY="275.0" text="In Stock:">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="16.0" layoutY="372.0" text="Is Low Stock:">
+                        <Label layoutX="19.0" layoutY="327.0" text="Is Low Stock:">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="11.0" layoutY="216.0" text="Average Cost:">
+                        <Label layoutX="14.0" layoutY="171.0" text="Average Cost:">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="itemCode" layoutX="124.0" layoutY="104.0" prefHeight="30.0" prefWidth="355.0">
+                        <Label fx:id="itemCode" layoutX="127.0" layoutY="59.0" prefHeight="30.0" prefWidth="355.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="itemName" layoutX="124.0" layoutY="160.0" prefHeight="30.0" prefWidth="392.0">
+                        <Label fx:id="itemName" layoutX="127.0" layoutY="115.0" prefHeight="57.0" prefWidth="539.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="averageCost" layoutX="164.0" layoutY="216.0" prefHeight="30.0" prefWidth="140.0">
+                        <Label fx:id="averageCost" layoutX="166.0" layoutY="171.0" prefHeight="30.0" prefWidth="140.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="inStock" layoutX="164.0" layoutY="320.0" prefHeight="30.0" prefWidth="131.0">
+                        <Label fx:id="inStock" layoutX="164.0" layoutY="275.0" prefHeight="30.0" prefWidth="131.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lowStock" layoutX="164.0" layoutY="372.0" prefHeight="30.0" prefWidth="149.0">
+                        <Label fx:id="lowStock" layoutX="165.0" layoutY="327.0" prefHeight="30.0" prefWidth="149.0">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -114,7 +114,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </JFXButton>
-                        <Label layoutX="14.0" layoutY="273.0" text="Quantity:">
+                        <Label layoutX="17.0" layoutY="228.0" text="Quantity:">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -124,7 +124,17 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </JFXButton>
-                        <TextField fx:id="quantity" disable="true" layoutX="164.0" layoutY="273.0" onKeyReleased="#enterItemToCartFromQuantity" prefHeight="44.0" prefWidth="138.0" text="0">
+                        <TextField fx:id="quantity" disable="true" layoutX="170.0" layoutY="214.0" onKeyReleased="#enterItemToCartFromQuantity" prefHeight="44.0" prefWidth="138.0" text="0">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="19.0" layoutY="371.0" text="Expiration Tag:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="expirationTagNumber" disable="true" layoutX="172.0" layoutY="357.0" onAction="#enterItemToCartFromQuantity" onKeyReleased="#enterItemToCartFromQuantity" prefHeight="44.0" prefWidth="138.0">
                            <font>
                               <Font size="20.0" />
                            </font>

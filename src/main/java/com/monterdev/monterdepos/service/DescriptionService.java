@@ -18,6 +18,7 @@ public class DescriptionService extends CartService {
         btnAddItem.setVisible(true);
         btnCancelItem.setVisible(true);
         quantity.setVisible(true);
+        super.expirationTagNumber.setDisable(false);
         quantity.requestFocus();
         String selectedItemCode = String.valueOf(itemListView.getSelectionModel().getSelectedItem());
         itemCode.setText(selectedItemCode);
