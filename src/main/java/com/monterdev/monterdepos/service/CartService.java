@@ -198,9 +198,8 @@ public class CartService extends DashboardComponents {
             }
             if (e.getCode() == KeyCode.ENTER && (Integer.parseInt(quantity.getText()) > 0)) {
                 ExpirationTag expirationTag = ExpirationTagDao.getInstance().getExpirationTagById(expirationTagNumber.getText());
-                LocalDate currentDate = LocalDate.of(expirationTag.getDateOfExpiration().getYear(),expirationTag.getDateOfExpiration().getMonth(),expirationTag.getDateOfExpiration().getDate());
-                LocalDate currentDateMinus1Month = currentDate.minusMonths(1);
-                if(expirationTag.getDateOfExpiration().after(new Date(currentDateMinus1Month.getYear(),currentDateMinus1Month.getMonthValue(),currentDateMinus1Month.getDayOfMonth()))){
+                LocalDate currentDateMinus30Days = LocalDate.now().minusDays(30);
+                if(expirationTag.getDateOfExpiration().isBefore(currentDateMinus30Days)){
                     Prompt.failed("Item is about to expire! Item will not be sold!");
                     resetSelectedItem();
                 }else{

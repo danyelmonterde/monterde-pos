@@ -86,6 +86,7 @@ public class ItemComponents {
         itemSupplierLocation.setText("");
         radioExistingItem.setSelected(false);
         radioNewItem.setSelected(false);
+        expirationTagNumber.setText("");
     }
 
     protected void disableFields() {
@@ -101,6 +102,7 @@ public class ItemComponents {
         itemSupplierLocation.setDisable(true);
         dateBoughtFromSupplier.setDisable(true);
         itemExpirationDate.setDisable(true);
+        expirationTagNumber.setDisable(true);
     }
 
     protected void enableFields() {
@@ -116,6 +118,7 @@ public class ItemComponents {
         itemSupplierLocation.setDisable(false);
         dateBoughtFromSupplier.setDisable(false);
         itemExpirationDate.setDisable(false);
+        expirationTagNumber.setDisable(false);
     }
 
     @FXML

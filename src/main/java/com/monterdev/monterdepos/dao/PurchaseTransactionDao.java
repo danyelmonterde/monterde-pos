@@ -1,18 +1,12 @@
 package com.monterdev.monterdepos.dao;
 
-import com.monterdev.monterdepos.model.Item;
-import com.monterdev.monterdepos.model.Purchase;
 import com.monterdev.monterdepos.model.PurchaseTransaction;
 import com.monterdev.monterdepos.util.HibernateUtil;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-import java.util.List;
 
 public class PurchaseTransactionDao {
 

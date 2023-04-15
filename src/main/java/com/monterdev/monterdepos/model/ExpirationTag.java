@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -24,7 +25,10 @@ public class ExpirationTag {
     private String expirationTag;
 
     @Column(name = "date_of_expiration")
-    private Date dateOfExpiration;
+    private LocalDate dateOfExpiration;
+
+    @Column(name = "item_code")
+    private String itemCode;
 
     @Column(name = "item_count")
     private int itemCount;

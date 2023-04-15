@@ -14,7 +14,7 @@ public class ExpirationTagGenerator {
 
     private static String startingTag = "0";
     private static int min = 100;
-    private static int max = 200;
+    private static int max = 999;
 
     public static String generateExpirationTag(){
         ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();

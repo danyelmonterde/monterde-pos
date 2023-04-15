@@ -1,6 +1,5 @@
 package com.monterdev.monterdepos.dao;
 
-import com.monterdev.monterdepos.model.Item;
 import com.monterdev.monterdepos.model.Purchase;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
@@ -10,8 +9,6 @@ import org.hibernate.Transaction;
 
 import java.util.Date;
 import java.util.List;
-
-import static com.monterdev.monterdepos.constants.StockAlertTypes.*;
 
 public class PurchaseDao {
 

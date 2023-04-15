@@ -113,4 +113,15 @@ public class SearchService extends DescriptionService {
         stage.show();
     }
 
+    @FXML
+    public void openBatchImport() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("service/BatchImport.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 782, 500);
+        Stage stage = new Stage();
+        stage.setTitle("Batch Import Items");
+        stage.setMaximized(true);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

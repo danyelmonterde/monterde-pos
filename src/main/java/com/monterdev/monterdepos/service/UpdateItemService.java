@@ -1,16 +1,11 @@
 package com.monterdev.monterdepos.service;
 
-import com.monterdev.monterdepos.dao.CategoryDao;
-import com.monterdev.monterdepos.dao.ItemDao;
-import com.monterdev.monterdepos.dao.PurchaseDao;
-import com.monterdev.monterdepos.dao.PurchaseTransactionDao;
-import com.monterdev.monterdepos.model.Category;
-import com.monterdev.monterdepos.model.Item;
-import com.monterdev.monterdepos.model.Purchase;
-import com.monterdev.monterdepos.model.PurchaseTransaction;
+import com.monterdev.monterdepos.dao.*;
+import com.monterdev.monterdepos.model.*;
 import com.monterdev.monterdepos.util.Prompt;
 import javafx.fxml.FXML;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -25,12 +20,15 @@ public class UpdateItemService extends DeleteItemService {
 
     private CategoryDao categoryDao;
 
+    private ExpirationTagDao expirationTagDao;
+
     @FXML
     private void updateItem() {
         itemDao = ItemDao.getInstance();
         purchaseDao = PurchaseDao.getInstance();
         purchaseTransactionDao = PurchaseTransactionDao.getInstance();
         categoryDao = CategoryDao.getInstance();
+        expirationTagDao = ExpirationTagDao.getInstance();
 
         Item item = new Item();
         item.setItemName(super.itemName.getText());
@@ -65,10 +63,16 @@ public class UpdateItemService extends DeleteItemService {
         purchaseTransactionUpdate.setDateTransacted(new Date());
         purchaseTransactionUpdate.setTransactionNumber(purchaseTransaction.getTransactionNumber());
 
+        ExpirationTag expirationTag = new ExpirationTag();
+        expirationTag.setDateOfExpiration(super.itemExpirationDate.getValue());
+        expirationTag.setItemCount(quantity);
+        expirationTag.setExpirationTag(expirationTagNumber.getText());
+        expirationTag.setItemCode(super.itemCode.getText());
 
         itemDao.updateItem(item);
         purchaseDao.updatePurchase(purchase);
         purchaseTransactionDao.updatePurchaseTransaction(purchaseTransactionUpdate);
+        expirationTagDao.updateExpirationTag(expirationTag);
 
 
         Prompt.success("Product was updated!");

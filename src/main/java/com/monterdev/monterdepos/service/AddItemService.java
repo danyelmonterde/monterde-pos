@@ -40,6 +40,7 @@ public class AddItemService extends UpdateItemService implements Initializable {
             purchaseDao = PurchaseDao.getInstance();
             purchaseTransactionDao = PurchaseTransactionDao.getInstance();
             categoryDao = CategoryDao.getInstance();
+            expirationTagDao = ExpirationTagDao.getInstance();
 
             List<Category> categoryList = categoryDao.getCategoryList();
             ObservableList<String> categories = FXCollections.observableArrayList();
@@ -60,11 +61,8 @@ public class AddItemService extends UpdateItemService implements Initializable {
 
                 enableFields();
                 super.itemQuantity.setDisable(true);
+                super.expirationTagNumber.setDisable(true);
                 super.itemCode.setDisable(true);
-                itemExpirationDate.setVisible(false);
-                expirationTagLabel.setVisible(false);
-                super.expirationTagNumber.setVisible(false);
-                super.expirationTagDateLabel.setVisible(false);
 
                 super.itemName.setText(item.getItemName());
                 super.itemInStock.setText(String.valueOf(item.getInStock()));
@@ -83,6 +81,10 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 super.dateBoughtFromSupplier.setValue(date.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate());
+
+                ExpirationTag expirationTag = expirationTagDao.getExpirationTagByItemCode(itemCode);
+                super.expirationTagNumber.setText(expirationTag.getExpirationTag());
+                super.itemExpirationDate.setValue(expirationTag.getDateOfExpiration());
 
             }else if(!StringUtil.cleanString(super.itemCode.getText()).isEmpty()){
                 clearFields();
@@ -115,6 +117,7 @@ public class AddItemService extends UpdateItemService implements Initializable {
                     && !itemQuantity.getText().isEmpty()
                     && !itemLowStock.getText().isEmpty()
                     && !itemAverageCost.getText().isEmpty()
+                    && !super.expirationTagNumber.getText().isEmpty()
                     && !originalPrice.getText().isEmpty()){
 
                 itemDao = ItemDao.getInstance();
@@ -157,7 +160,8 @@ public class AddItemService extends UpdateItemService implements Initializable {
 
                 ExpirationTag expirationTag = new ExpirationTag();
                 expirationTag.setExpirationTag(expirationTagNumber);
-                expirationTag.setDateOfExpiration(Date.from(itemExpirationDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                expirationTag.setItemCode(super.itemCode.getText());
+                expirationTag.setDateOfExpiration(super.itemExpirationDate.getValue());
                 expirationTag.setItemCount(quantity);
 
                 itemDao.saveItem(item);
@@ -172,10 +176,6 @@ public class AddItemService extends UpdateItemService implements Initializable {
                 itemCode.setDisable(false);
                 super.itemCode.setText("");
                 super.btnAddItem.setVisible(false);
-                itemExpirationDate.setVisible(false);
-                super.expirationTagNumber.setVisible(false);
-                expirationTagDateLabel.setVisible(false);
-                expirationTagLabel.setVisible(false);
                 expirationTagNumber = ExpirationTagGenerator.generateExpirationTag();
             }else{
                 Prompt.failed("Please fill in all fields!");
