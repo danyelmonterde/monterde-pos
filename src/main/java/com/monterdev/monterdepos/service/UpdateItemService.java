@@ -84,6 +84,7 @@ public class UpdateItemService extends DeleteItemService {
         super.itemCode.setDisable(false);
         super.btnUpdateItem.setVisible(false);
         super.btnCancel.setVisible(false);
+        expirationTagNumber.setVisible(false);
 
     }
 

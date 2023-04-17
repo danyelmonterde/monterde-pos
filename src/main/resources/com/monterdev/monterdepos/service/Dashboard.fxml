@@ -29,6 +29,7 @@
                   <MenuItem fx:id="inventoryMenuItem1" mnemonicParsing="false" onAction="#openPurchaseList" text="View Purchase List" />
                   <MenuItem fx:id="inventoryMenuItem2" mnemonicParsing="false" onAction="#openSalesList" text="View Sales List" />
                   <MenuItem fx:id="inventoryMenuItem21" mnemonicParsing="false" onAction="#openBatchImport" text="Batch Import" />
+                  <MenuItem fx:id="inventoryMenuItem211" mnemonicParsing="false" onAction="#updateDatabase" text="Update Database" />
           </items>
         </Menu>
       </menus>

@@ -1,8 +1,9 @@
 package com.monterdev.monterdepos.service;
 
 import com.monterdev.monterdepos.MainApplication;
-import com.monterdev.monterdepos.dao.ItemDao;
-import com.monterdev.monterdepos.model.Item;
+import com.monterdev.monterdepos.dao.*;
+import com.monterdev.monterdepos.model.*;
+import com.monterdev.monterdepos.util.Prompt;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,8 +12,13 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 public class SearchService extends DescriptionService {
@@ -20,6 +26,8 @@ public class SearchService extends DescriptionService {
     private ObservableList<String> listOfItems;
 
     private ItemDao itemDao;
+
+    private static final Logger LOGGER = LogManager.getLogger(SearchService.class);
 
     @FXML
     public void searchItemFromItemList(KeyEvent e) {
@@ -68,6 +76,8 @@ public class SearchService extends DescriptionService {
         btnCancelItem.setVisible(false);
         quantity.setVisible(false);
         searchItem.requestFocus();
+        expirationTagNumber.setText("");
+        expirationTagNumber.setVisible(false);
     }
 
     @FXML
@@ -87,7 +97,7 @@ public class SearchService extends DescriptionService {
         Stage stage = new Stage();
         stage.setTitle("Inventory List of Grocery Products");
         stage.setScene(scene);
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.show();
     }
 
@@ -97,7 +107,7 @@ public class SearchService extends DescriptionService {
         Scene scene = new Scene(fxmlLoader.load(), 782, 500);
         Stage stage = new Stage();
         stage.setTitle("Inventory List of Purchased Products");
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
@@ -108,7 +118,7 @@ public class SearchService extends DescriptionService {
         Scene scene = new Scene(fxmlLoader.load(), 782, 500);
         Stage stage = new Stage();
         stage.setTitle("Sales List");
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }
@@ -122,6 +132,79 @@ public class SearchService extends DescriptionService {
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    public void updateDatabase(){
+        if (Prompt.confirm("Are you sure you want to import data from Global Database?").get().getText().equalsIgnoreCase("OK")) {
+
+            try {
+                URL url = new URL("https://www.google.com");
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                CategoryDao categoryDao = CategoryDao.getInstance();
+                ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();
+                //UPDATE CATEGORY
+                List<Category> globalCategoryList = categoryDao.getCategoryListFromProd();
+                globalCategoryList.stream().forEach(category->{
+                    categoryDao.updateCategory(category);
+                });
+
+
+                //UPDATE ITEM
+                List<Item> globalItemList = itemDao.getItemListFromProd();
+                globalItemList.stream().forEach(item->{
+                    itemDao.updateItem(item);
+                });
+
+                //UPDATE ITEM EXPIRATION
+                List<ExpirationTag> expirationTagList = expirationTagDao.getExpirationTagListFromProd();
+                expirationTagList.stream().forEach(tag->{
+                    expirationTagDao.updateExpirationTagFromProd(tag);
+                });
+
+                //UPDATE PURCHASE
+                PurchaseDao purchaseDao = PurchaseDao.getInstance();
+                List<Purchase> purchaseList = purchaseDao.getPurchaseListFromProd();
+                purchaseList.stream().forEach(purchase -> {
+                    purchaseDao.updatePurchaseFromProd(purchase);
+                });
+
+                //UPDATE PURCHASE TRANSACTION
+                PurchaseTransactionDao purchaseTransactionDao = PurchaseTransactionDao.getInstance();
+                List<PurchaseTransaction> purchaseTransactionList = purchaseTransactionDao.getPurchaseTransactionListFromProd();
+                purchaseTransactionList.stream().forEach(purchaseTransaction->{
+                    purchaseTransactionDao.updatePurchaseTransactionFromProd(purchaseTransaction);
+                });
+
+                //UPDATE SALES
+                SalesDao salesDao = SalesDao.getInstance();
+                List<Sales> salesList = salesDao.getSalesListFromProd();
+                salesList.stream().forEach(sales -> {
+                    salesDao.updateSales(sales);
+                });
+
+                //UPDATE SALES TRANSACTION
+                TransactionDao salesTransactionDao = TransactionDao.getInstance();
+                List<SalesTransaction> salesTransactionList = salesTransactionDao.getSalesTransactionListFromProd();
+                salesTransactionList.stream().forEach(salesTransaction ->{
+                    salesTransactionDao.updateSalesTransaction(salesTransaction);
+                });
+
+                Prompt.success("Database was successfully updated!");
+
+
+            } catch (MalformedURLException e) {
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            } catch (IOException e) {
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            }
+
+        }
+
     }
 
 }

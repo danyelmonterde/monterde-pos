@@ -1,6 +1,7 @@
 package com.monterdev.monterdepos.dao;
 
 import com.monterdev.monterdepos.model.Purchase;
+import com.monterdev.monterdepos.util.HibernateProdUtil;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
@@ -59,6 +60,19 @@ public class PurchaseDao {
         }
     }
 
+    public void updatePurchaseFromProd(Purchase purchase) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(purchase);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public List<Purchase> getPurchaseListByItemCode(String itemCode){
         Transaction transaction = null;
         List<Purchase> purchaseList = null;
@@ -112,6 +126,28 @@ public class PurchaseDao {
             transaction.commit();
         }catch (Exception ex){
             if(transaction!= null){
+                transaction.rollback();
+            }
+        }
+        return purchaseList;
+    }
+
+    public List<Purchase> getPurchaseListFromProd() {
+        Transaction transaction = null;
+
+        List<Purchase> purchaseList = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Purchase> cr = cb.createQuery(Purchase.class);
+            Root<Purchase> root = cr.from(Purchase.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            purchaseList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
                 transaction.rollback();
             }
         }

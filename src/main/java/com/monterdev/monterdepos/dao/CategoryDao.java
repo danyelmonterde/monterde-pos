@@ -3,6 +3,7 @@ package com.monterdev.monterdepos.dao;
 import com.monterdev.monterdepos.constants.CategoryTypes;
 import com.monterdev.monterdepos.model.Category;
 import com.monterdev.monterdepos.model.Item;
+import com.monterdev.monterdepos.util.HibernateProdUtil;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -102,6 +103,28 @@ public class CategoryDao {
 
         List<Category> categoryList = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Category> cr = cb.createQuery(Category.class);
+            Root<Category> root = cr.from(Category.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            categoryList = query.getResultList();
+
+            transaction.commit();
+        }catch (Exception ex){
+            if(transaction!= null){
+                transaction.rollback();
+            }
+        }
+        return categoryList;
+    }
+
+    public List<Category> getCategoryListFromProd(){
+        Transaction transaction = null;
+
+        List<Category> categoryList = null;
+        try(Session session = HibernateProdUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Category> cr = cb.createQuery(Category.class);

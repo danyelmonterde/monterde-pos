@@ -54,6 +54,7 @@ public class CartService extends DashboardComponents {
         quantity.setDisable(true);
         btnAddItem.setVisible(false);
         btnCancelItem.setVisible(false);
+        expirationTagNumber.setVisible(false);
         amountPaid.setDisable(false);
         ObservableList<String> itemsOnCartArrayList = FXCollections.observableArrayList();
         try {
@@ -82,6 +83,7 @@ public class CartService extends DashboardComponents {
                 quantity.setDisable(false);
                 btnAddItem.setVisible(true);
                 btnCancelItem.setVisible(true);
+                expirationTagNumber.setVisible(true);
                 Prompt.failed("Enter quantity greater than 0!");
             }
         } catch (NumberFormatException emptyQuantity) {
@@ -92,6 +94,7 @@ public class CartService extends DashboardComponents {
 
     private void disableAmountPaidIfCartIsEmpty(){
         if(cart.getItems().size()==0){
+            amountPaid.setText("");
             amountPaid.setDisable(true);
         }
     }
@@ -102,6 +105,7 @@ public class CartService extends DashboardComponents {
             quantity.setDisable(false);
             btnAddItem.setVisible(true);
             btnCancelItem.setVisible(true);
+            expirationTagNumber.setVisible(true);
             selectedIndex = cart.getSelectionModel().getSelectedIndex();
             String selectedText = (String) cart.getSelectionModel().getSelectedItem();
             String itemCode = selectedText.split(CART_TEXT_SEPARATOR_REGEX)[0];
@@ -119,6 +123,7 @@ public class CartService extends DashboardComponents {
                     super.quantity.setVisible(false);
                     btnAddItem.setVisible(false);
                     btnCancelItem.setVisible(false);
+                    expirationTagNumber.setVisible(false);
                 }
                 itemsOnCartSet.remove(selectedText);
                 total -= (item.getAverageCost() * Integer.parseInt(quantity));
@@ -141,16 +146,20 @@ public class CartService extends DashboardComponents {
                 super.inStock.setText(String.valueOf(item.getInStock()));
                 super.lowStock.setText(String.valueOf(item.getLowStock()));
                 super.averageCost.setText(String.valueOf(item.getAverageCost()));
+                ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();
+                expirationTagNumber.setText(expirationTagDao.getExpirationTagByItemCode(itemCode).getExpirationTag());
             } else if (e.getCode() == KeyCode.ESCAPE) {
                 searchItem.requestFocus();
                 super.quantity.setVisible(false);
                 btnCancelItem.setVisible(false);
+                expirationTagNumber.setVisible(false);
                 btnAddItem.setVisible(false);
                 super.amountPaid.setText("0");
                 super.change.setText("0");
             } else if (e.getCode() == KeyCode.END) {
                 super.quantity.setVisible(false);
                 btnCancelItem.setVisible(false);
+                expirationTagNumber.setVisible(false);
                 btnAddItem.setVisible(false);
                 amountPaid.requestFocus();
 
@@ -180,6 +189,7 @@ public class CartService extends DashboardComponents {
         } else if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.HOME) {
             btnAddItem.setVisible(false);
             btnCancelItem.setVisible(false);
+            expirationTagNumber.setVisible(false);
             super.quantity.setVisible(false);
             super.change.setText("0");
             super.amountPaid.setText("0");
@@ -198,10 +208,14 @@ public class CartService extends DashboardComponents {
             }
             if (e.getCode() == KeyCode.ENTER && (Integer.parseInt(quantity.getText()) > 0)) {
                 ExpirationTag expirationTag = ExpirationTagDao.getInstance().getExpirationTagById(expirationTagNumber.getText());
-                LocalDate currentDateMinus30Days = LocalDate.now().minusDays(30);
-                if(expirationTag.getDateOfExpiration().isBefore(currentDateMinus30Days)){
+                LocalDate currentDayMinus30 = LocalDate.now().minusDays(30);
+                LocalDate currentDay = LocalDate.now();
+                if(expirationTag.getDateOfExpiration().isAfter(currentDayMinus30) && expirationTag.getDateOfExpiration().isBefore(currentDay)){
                     Prompt.failed("Item is about to expire! Item will not be sold!");
                     resetSelectedItem();
+                    btnAddItem.setVisible(false);
+                    btnCancelItem.setVisible(false);
+                    searchItem.requestFocus();
                 }else{
                     addItemToCart();
                 }
@@ -293,6 +307,7 @@ public class CartService extends DashboardComponents {
                 Prompt.success("Thank you for buying!");
                 btnAddItem.setVisible(false);
                 btnCancelItem.setVisible(false);
+                expirationTagNumber.setVisible(false);
                 amountPaid.setDisable(true);
                 quantity.setDisable(true);
             }

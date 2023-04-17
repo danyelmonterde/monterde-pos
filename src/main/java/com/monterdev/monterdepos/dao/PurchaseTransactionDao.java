@@ -1,44 +1,50 @@
 package com.monterdev.monterdepos.dao;
 
+import com.monterdev.monterdepos.model.Purchase;
 import com.monterdev.monterdepos.model.PurchaseTransaction;
+import com.monterdev.monterdepos.util.HibernateProdUtil;
 import com.monterdev.monterdepos.util.HibernateUtil;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.List;
+
 public class PurchaseTransactionDao {
 
     private static PurchaseTransactionDao purchaseTransactionDao;
 
-    private PurchaseTransactionDao(){
+    private PurchaseTransactionDao() {
 
     }
 
-    public static PurchaseTransactionDao getInstance(){
-        if(purchaseTransactionDao == null){
+    public static PurchaseTransactionDao getInstance() {
+        if (purchaseTransactionDao == null) {
             purchaseTransactionDao = new PurchaseTransactionDao();
         }
         return purchaseTransactionDao;
     }
 
-    public void savePurchaseTransaction(PurchaseTransaction purchase){
+    public void savePurchaseTransaction(PurchaseTransaction purchase) {
         Transaction transaction = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.save(purchase);
             transaction.commit();
-        }catch (Exception ex){
-            if(transaction!= null){
+        } catch (Exception ex) {
+            if (transaction != null) {
                 transaction.rollback();
             }
         }
     }
 
-    public void updatePurchaseTransaction(PurchaseTransaction purchaseTransaction){
+    public void updatePurchaseTransaction(PurchaseTransaction purchaseTransaction) {
         Transaction transaction = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaUpdate<PurchaseTransaction> criteriaUpdate = cb.createCriteriaUpdate(PurchaseTransaction.class);
@@ -51,27 +57,62 @@ public class PurchaseTransactionDao {
             criteriaUpdate.where(cb.equal(root.get("transactionNumber"), purchaseTransaction.getTransactionNumber()));
             session.createQuery(criteriaUpdate).executeUpdate();
             transaction.commit();
-        }catch (Exception ex){
-            if(transaction!= null){
+        } catch (Exception ex) {
+            if (transaction != null) {
                 transaction.rollback();
             }
         }
     }
 
-    public PurchaseTransaction getPurchaseTransactionByTransactionNumber(String transactionNumber){
+    public void updatePurchaseTransactionFromProd(PurchaseTransaction purchaseTransaction) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(purchaseTransaction);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public PurchaseTransaction getPurchaseTransactionByTransactionNumber(String transactionNumber) {
         Transaction transaction = null;
         PurchaseTransaction purchaseTransaction = null;
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            purchaseTransaction = session.get(PurchaseTransaction.class,transactionNumber);
+            purchaseTransaction = session.get(PurchaseTransaction.class, transactionNumber);
 
             transaction.commit();
-        }catch (Exception ex){
-            if(transaction!= null){
+        } catch (Exception ex) {
+            if (transaction != null) {
                 transaction.rollback();
             }
         }
         return purchaseTransaction;
+    }
+
+    public List<PurchaseTransaction> getPurchaseTransactionListFromProd() {
+        Transaction transaction = null;
+
+        List<PurchaseTransaction> purchaseTransactionList = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<PurchaseTransaction> cr = cb.createQuery(PurchaseTransaction.class);
+            Root<PurchaseTransaction> root = cr.from(PurchaseTransaction.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            purchaseTransactionList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return purchaseTransactionList;
     }
 }

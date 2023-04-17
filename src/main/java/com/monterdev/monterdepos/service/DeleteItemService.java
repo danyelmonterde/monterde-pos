@@ -20,6 +20,7 @@ public class DeleteItemService extends ItemComponents {
         super.itemCode.setDisable(false);
         super.btnUpdateItem.setVisible(false);
         super.btnCancel.setVisible(false);
+        expirationTagNumber.setVisible(false);
         super.btnDeleteItem.setVisible(false);
         super.itemCode.requestFocus();
 

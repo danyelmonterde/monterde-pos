@@ -1,6 +1,8 @@
 package com.monterdev.monterdepos.dao;
 
 import com.monterdev.monterdepos.model.ExpirationTag;
+import com.monterdev.monterdepos.model.Item;
+import com.monterdev.monterdepos.util.HibernateProdUtil;
 import com.monterdev.monterdepos.util.HibernateUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
@@ -57,6 +59,19 @@ public class ExpirationTagDao {
         }
     }
 
+    public void updateExpirationTagFromProd(ExpirationTag expirationTag) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(expirationTag);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public ExpirationTag getExpirationTagById(String expirationTag) {
         Transaction transaction = null;
         ExpirationTag expirationTag1 = null;
@@ -79,6 +94,28 @@ public class ExpirationTagDao {
 
         List<ExpirationTag> expirationTagList = null;
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<ExpirationTag> cr = cb.createQuery(ExpirationTag.class);
+            Root<ExpirationTag> root = cr.from(ExpirationTag.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            expirationTagList = query.getResultList();
+
+            transaction.commit();
+        }catch (Exception ex){
+            if(transaction!= null){
+                transaction.rollback();
+            }
+        }
+        return expirationTagList;
+    }
+
+    public List<ExpirationTag> getExpirationTagListFromProd(){
+        Transaction transaction = null;
+
+        List<ExpirationTag> expirationTagList = null;
+        try(Session session = HibernateProdUtil.getSessionFactory().openSession()){
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<ExpirationTag> cr = cb.createQuery(ExpirationTag.class);

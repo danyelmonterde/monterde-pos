@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-import static com.monterdev.monterdepos.constants.ConfigFile.CONFIG_FILE_NAME;
+import static com.monterdev.monterdepos.constants.ConfigFile.LOCAL_CONFIG_FILE_NAME;
 
 public class PurchaseListService extends PurchaseListComponents implements Initializable {
 
@@ -235,7 +235,7 @@ public class PurchaseListService extends PurchaseListComponents implements Initi
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd -hh-mm-ss");
         String strDate = dateFormat.format(date);
         Properties properties = new Properties();
-        properties.load(InventoryService.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME));
+        properties.load(InventoryService.class.getClassLoader().getResourceAsStream(LOCAL_CONFIG_FILE_NAME));
         try (OutputStream fileOut = new FileOutputStream(System.getProperty("user.home") + "/Desktop/"+ strDate.replaceAll("\\s+", "") + "-purchase" + ".xls")) {
             workbook.write(fileOut);
         } catch (FileNotFoundException e) {

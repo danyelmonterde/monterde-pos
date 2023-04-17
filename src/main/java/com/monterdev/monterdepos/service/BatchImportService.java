@@ -14,12 +14,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -28,13 +28,15 @@ import java.util.ResourceBundle;
 
 public class BatchImportService extends BatchImportComponent implements Initializable {
 
+    private static final Logger LOGGER = LogManager.getLogger(BatchImportService.class);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
     @FXML
-    public void importItems(){
+    public void importItems() {
 
         ItemDao itemDao = ItemDao.getInstance();
         PurchaseDao purchaseDao = PurchaseDao.getInstance();
@@ -53,7 +55,7 @@ public class BatchImportService extends BatchImportComponent implements Initiali
 
                 if (!importedItems.isEmpty()) {
                     if (Prompt.confirm("Are you sure you want to import this file? Existing items will be deleted.").get().getText().equalsIgnoreCase("OK")) {
-                        importedItems.stream().forEach(e->{
+                        importedItems.stream().forEach(e -> {
                             Item item = new Item();
                             item.setItemName(e.getItemName());
                             item.setItemCode(e.getBarCode());
@@ -66,7 +68,7 @@ public class BatchImportService extends BatchImportComponent implements Initiali
 
 
                             Purchase purchase = new Purchase();
-                            purchase.setCost(e.getQuantity()*e.getUnitPrice());
+                            purchase.setCost(e.getUnitPrice());
                             purchase.setTotal(e.getTotalPrice());
                             purchase.setQuantity(e.getQuantity());
                             String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
@@ -88,21 +90,21 @@ public class BatchImportService extends BatchImportComponent implements Initiali
 
                             String strExpirationDate = e.getDateOfExpiration();
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
-                            LocalDate expirationDate = LocalDate.parse(strExpirationDate,formatter);
+                            LocalDate expirationDate = LocalDate.parse(strExpirationDate, formatter);
                             expirationTag.setDateOfExpiration(expirationDate);
                             expirationTag.setItemCount(e.getQuantity());
 
 
                             itemDao.saveItem(item);
+                            LOGGER.info("IMPORTING ITEM: "+item.getItemName());
                             purchaseDao.savePurchase(purchase);
                             purchaseTransactionDao.savePurchaseTransaction(purchaseTransaction);
                             expirationTagDao.saveExpirationTag(expirationTag);
 
 
-
-
                         });
                         Prompt.success("Items were successfully imported!");
+                        LOGGER.info("DONE IMPORTING ITEMS AND OTHER TRANSACTIONS");
                         stage.close();
                     } else {
                         Prompt.failed("Error importing Items!");

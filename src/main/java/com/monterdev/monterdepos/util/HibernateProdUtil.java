@@ -9,10 +9,9 @@ import org.hibernate.service.ServiceRegistry;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static com.monterdev.monterdepos.constants.ConfigFile.LOCAL_CONFIG_FILE_NAME;
 import static com.monterdev.monterdepos.constants.ConfigFile.PUNCH_CONFIG_FILE_NAME;
 
-public class HibernateUtil {
+public class HibernateProdUtil {
 
     private static SessionFactory sessionFactory;
 
@@ -21,7 +20,7 @@ public class HibernateUtil {
             try {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
-                InputStream ip = HibernateUtil.class.getClassLoader().getResourceAsStream(LOCAL_CONFIG_FILE_NAME);
+                InputStream ip = HibernateProdUtil.class.getClassLoader().getResourceAsStream(PUNCH_CONFIG_FILE_NAME);
                 settings.load(ip);
                 configuration.setProperties(settings);
                 configuration.addAnnotatedClass(Item.class);
