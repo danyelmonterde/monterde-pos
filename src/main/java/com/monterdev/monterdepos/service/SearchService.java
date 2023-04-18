@@ -147,6 +147,7 @@ public class SearchService extends DescriptionService {
                 ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();
                 //UPDATE CATEGORY
                 List<Category> globalCategoryList = categoryDao.getCategoryListFromProd();
+                LOGGER.info("Updating Category");
                 globalCategoryList.stream().forEach(category->{
                     categoryDao.updateCategory(category);
                 });
@@ -154,12 +155,14 @@ public class SearchService extends DescriptionService {
 
                 //UPDATE ITEM
                 List<Item> globalItemList = itemDao.getItemListFromProd();
+                LOGGER.info("Updating Item");
                 globalItemList.stream().forEach(item->{
                     itemDao.updateItem(item);
                 });
 
                 //UPDATE ITEM EXPIRATION
                 List<ExpirationTag> expirationTagList = expirationTagDao.getExpirationTagListFromProd();
+                LOGGER.info("Updating Item Expiration");
                 expirationTagList.stream().forEach(tag->{
                     expirationTagDao.updateExpirationTagFromProd(tag);
                 });
@@ -167,6 +170,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE PURCHASE
                 PurchaseDao purchaseDao = PurchaseDao.getInstance();
                 List<Purchase> purchaseList = purchaseDao.getPurchaseListFromProd();
+                LOGGER.info("Updating Purchase");
                 purchaseList.stream().forEach(purchase -> {
                     purchaseDao.updatePurchaseFromProd(purchase);
                 });
@@ -174,6 +178,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE PURCHASE TRANSACTION
                 PurchaseTransactionDao purchaseTransactionDao = PurchaseTransactionDao.getInstance();
                 List<PurchaseTransaction> purchaseTransactionList = purchaseTransactionDao.getPurchaseTransactionListFromProd();
+                LOGGER.info("Updating Purchase Transaction");
                 purchaseTransactionList.stream().forEach(purchaseTransaction->{
                     purchaseTransactionDao.updatePurchaseTransactionFromProd(purchaseTransaction);
                 });
@@ -181,6 +186,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE SALES
                 SalesDao salesDao = SalesDao.getInstance();
                 List<Sales> salesList = salesDao.getSalesListFromProd();
+                LOGGER.info("Updating Sales");
                 salesList.stream().forEach(sales -> {
                     salesDao.updateSales(sales);
                 });
@@ -188,23 +194,111 @@ public class SearchService extends DescriptionService {
                 //UPDATE SALES TRANSACTION
                 TransactionDao salesTransactionDao = TransactionDao.getInstance();
                 List<SalesTransaction> salesTransactionList = salesTransactionDao.getSalesTransactionListFromProd();
+                LOGGER.info("Updating Sales Transaction");
                 salesTransactionList.stream().forEach(salesTransaction ->{
                     salesTransactionDao.updateSalesTransaction(salesTransaction);
                 });
-
+                LOGGER.info("Done updating database!");
                 Prompt.success("Database was successfully updated!");
 
 
             } catch (MalformedURLException e) {
                 LOGGER.error("No internet Connection!");
                 Prompt.failed("Please connect to Internet!");
-            } catch (IOException e) {
+            }catch (NullPointerException e){
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            }
+            catch (IOException e) {
                 LOGGER.error("No internet Connection!");
                 Prompt.failed("Please connect to Internet!");
             }
 
         }
 
+    }
+
+    @FXML
+    public void backupDatabase(){
+        if (Prompt.confirm("Are you sure you want to backup data to Global Database?").get().getText().equalsIgnoreCase("OK")) {
+
+            try {
+                URL url = new URL("https://www.google.com");
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                CategoryDao categoryDao = CategoryDao.getInstance();
+                ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();
+                //UPDATE CATEGORY
+                List<Category> globalCategoryList = categoryDao.getCategoryList();
+                LOGGER.info("Updating Category");
+                globalCategoryList.stream().forEach(category->{
+                    categoryDao.updateCategoryInProd(category);
+                });
+
+
+                //UPDATE ITEM
+                List<Item> globalItemList = itemDao.getItemList();
+                LOGGER.info("Updating Item");
+                globalItemList.stream().forEach(item->{
+                    itemDao.updateItemInProd(item);
+                });
+
+                //UPDATE ITEM EXPIRATION
+                List<ExpirationTag> expirationTagList = expirationTagDao.getExpirationTagList();
+                LOGGER.info("Updating Item Expiration");
+                expirationTagList.stream().forEach(tag->{
+                    expirationTagDao.updateExpirationTagInProd(tag);
+                });
+
+                //UPDATE PURCHASE
+                PurchaseDao purchaseDao = PurchaseDao.getInstance();
+                List<Purchase> purchaseList = purchaseDao.getPurchaseList();
+                LOGGER.info("Updating Purchase");
+                purchaseList.stream().forEach(purchase -> {
+                    purchaseDao.updatePurchaseInProd(purchase);
+                });
+
+                //UPDATE PURCHASE TRANSACTION
+                PurchaseTransactionDao purchaseTransactionDao = PurchaseTransactionDao.getInstance();
+                List<PurchaseTransaction> purchaseTransactionList = purchaseTransactionDao.getPurchaseTransactionList();
+                LOGGER.info("Updating Purchase Transaction");
+                purchaseTransactionList.stream().forEach(purchaseTransaction->{
+                    purchaseTransactionDao.updatePurchaseTransactionInProd(purchaseTransaction);
+                });
+
+                //UPDATE SALES
+                SalesDao salesDao = SalesDao.getInstance();
+                List<Sales> salesList = salesDao.getSalesList();
+                LOGGER.info("Updating Sales");
+                salesList.stream().forEach(sales -> {
+                    salesDao.updateSalesInProd(sales);
+                });
+
+                //UPDATE SALES TRANSACTION
+                TransactionDao salesTransactionDao = TransactionDao.getInstance();
+                List<SalesTransaction> salesTransactionList = salesTransactionDao.getSalesTransactionList();
+                LOGGER.info("Updating Sales Transaction");
+                salesTransactionList.stream().forEach(salesTransaction ->{
+                    salesTransactionDao.updateSalesTransactionInProd(salesTransaction);
+                });
+                LOGGER.info("Done updating database!");
+                Prompt.success("Database was successfully updated!");
+
+
+            } catch (MalformedURLException e) {
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            }catch (NullPointerException e){
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            }
+            catch (IOException e) {
+                LOGGER.error("No internet Connection!");
+                Prompt.failed("Please connect to Internet!");
+            }
+
+        }
     }
 
 }

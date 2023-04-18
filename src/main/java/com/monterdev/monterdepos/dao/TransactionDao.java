@@ -44,6 +44,19 @@ public class TransactionDao {
 
     public void updateSalesTransaction(SalesTransaction salesTransaction) {
         Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(salesTransaction);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void updateSalesTransactionInProd(SalesTransaction salesTransaction) {
+        Transaction transaction = null;
         try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(salesTransaction);
@@ -60,6 +73,28 @@ public class TransactionDao {
 
         List<SalesTransaction> salesTransactionList = null;
         try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<SalesTransaction> cr = cb.createQuery(SalesTransaction.class);
+            Root<SalesTransaction> root = cr.from(SalesTransaction.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            salesTransactionList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return salesTransactionList;
+    }
+
+    public List<SalesTransaction> getSalesTransactionList() {
+        Transaction transaction = null;
+
+        List<SalesTransaction> salesTransactionList = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<SalesTransaction> cr = cb.createQuery(SalesTransaction.class);

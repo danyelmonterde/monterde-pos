@@ -95,9 +95,44 @@ public class SalesDao {
         return salesList;
     }
 
+    public List<Sales> getSalesList() {
+        Transaction transaction = null;
+
+        List<Sales> salesList = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Sales> cr = cb.createQuery(Sales.class);
+            Root<Sales> root = cr.from(Sales.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            salesList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return salesList;
+    }
+
     public void updateSales(Sales sales) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(sales);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    public void updateSalesInProd(Sales sales) {
+        Transaction transaction = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(sales);
             transaction.commit();

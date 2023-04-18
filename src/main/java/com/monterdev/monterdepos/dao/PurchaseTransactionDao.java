@@ -77,6 +77,19 @@ public class PurchaseTransactionDao {
         }
     }
 
+    public void updatePurchaseTransactionInProd(PurchaseTransaction purchaseTransaction) {
+        Transaction transaction = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(purchaseTransaction);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public PurchaseTransaction getPurchaseTransactionByTransactionNumber(String transactionNumber) {
         Transaction transaction = null;
         PurchaseTransaction purchaseTransaction = null;
@@ -99,6 +112,28 @@ public class PurchaseTransactionDao {
 
         List<PurchaseTransaction> purchaseTransactionList = null;
         try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<PurchaseTransaction> cr = cb.createQuery(PurchaseTransaction.class);
+            Root<PurchaseTransaction> root = cr.from(PurchaseTransaction.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            purchaseTransactionList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return purchaseTransactionList;
+    }
+
+    public List<PurchaseTransaction> getPurchaseTransactionList() {
+        Transaction transaction = null;
+
+        List<PurchaseTransaction> purchaseTransactionList = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<PurchaseTransaction> cr = cb.createQuery(PurchaseTransaction.class);

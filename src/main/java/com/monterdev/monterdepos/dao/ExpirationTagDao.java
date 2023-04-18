@@ -72,6 +72,19 @@ public class ExpirationTagDao {
         }
     }
 
+    public void updateExpirationTagInProd(ExpirationTag expirationTag) {
+        Transaction transaction = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(expirationTag);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public ExpirationTag getExpirationTagById(String expirationTag) {
         Transaction transaction = null;
         ExpirationTag expirationTag1 = null;
@@ -132,6 +145,8 @@ public class ExpirationTagDao {
         }
         return expirationTagList;
     }
+
+
 
     public ExpirationTag getExpirationTagByItemCode(String itemCode){
         Transaction transaction = null;

@@ -53,6 +53,19 @@ public class ItemDao {
         }
     }
 
+    public void updateItemInProd(Item item) {
+        Transaction transaction = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(item);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public Item getItemByItemCode(String itemCode) {
         Transaction transaction = null;
         Item item1 = null;
@@ -174,6 +187,28 @@ public class ItemDao {
 
         List<Item> itemList = null;
         try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Item> cr = cb.createQuery(Item.class);
+            Root<Item> root = cr.from(Item.class);
+            cr.select(root);
+            Query query = session.createQuery(cr);
+            itemList = query.getResultList();
+
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return itemList;
+    }
+
+    public List<Item> getItemList() {
+        Transaction transaction = null;
+
+        List<Item> itemList = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Item> cr = cb.createQuery(Item.class);

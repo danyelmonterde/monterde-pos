@@ -56,6 +56,19 @@ public class CategoryDao {
         }
     }
 
+    public void updateCategoryInProd(Category category) {
+        Transaction transaction = null;
+        try (Session session = HibernateProdUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(category);
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public Category getCategoryById(int categoryId) {
         Transaction transaction = null;
         Category category = null;
