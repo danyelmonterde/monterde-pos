@@ -231,7 +231,7 @@ public class SearchService extends DescriptionService {
                 ExpirationTagDao expirationTagDao = ExpirationTagDao.getInstance();
                 //UPDATE CATEGORY
                 List<Category> globalCategoryList = categoryDao.getCategoryList();
-                LOGGER.info("Updating Category");
+                LOGGER.info("Backing up Category");
                 globalCategoryList.stream().forEach(category->{
                     categoryDao.updateCategoryInProd(category);
                 });
@@ -239,14 +239,14 @@ public class SearchService extends DescriptionService {
 
                 //UPDATE ITEM
                 List<Item> globalItemList = itemDao.getItemList();
-                LOGGER.info("Updating Item");
+                LOGGER.info("Backing up Item");
                 globalItemList.stream().forEach(item->{
                     itemDao.updateItemInProd(item);
                 });
 
                 //UPDATE ITEM EXPIRATION
                 List<ExpirationTag> expirationTagList = expirationTagDao.getExpirationTagList();
-                LOGGER.info("Updating Item Expiration");
+                LOGGER.info("Backing up Item Expiration");
                 expirationTagList.stream().forEach(tag->{
                     expirationTagDao.updateExpirationTagInProd(tag);
                 });
@@ -254,7 +254,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE PURCHASE
                 PurchaseDao purchaseDao = PurchaseDao.getInstance();
                 List<Purchase> purchaseList = purchaseDao.getPurchaseList();
-                LOGGER.info("Updating Purchase");
+                LOGGER.info("Backing up Purchase");
                 purchaseList.stream().forEach(purchase -> {
                     purchaseDao.updatePurchaseInProd(purchase);
                 });
@@ -262,7 +262,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE PURCHASE TRANSACTION
                 PurchaseTransactionDao purchaseTransactionDao = PurchaseTransactionDao.getInstance();
                 List<PurchaseTransaction> purchaseTransactionList = purchaseTransactionDao.getPurchaseTransactionList();
-                LOGGER.info("Updating Purchase Transaction");
+                LOGGER.info("Backing up Purchase Transaction");
                 purchaseTransactionList.stream().forEach(purchaseTransaction->{
                     purchaseTransactionDao.updatePurchaseTransactionInProd(purchaseTransaction);
                 });
@@ -270,7 +270,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE SALES
                 SalesDao salesDao = SalesDao.getInstance();
                 List<Sales> salesList = salesDao.getSalesList();
-                LOGGER.info("Updating Sales");
+                LOGGER.info("Backing up Sales");
                 salesList.stream().forEach(sales -> {
                     salesDao.updateSalesInProd(sales);
                 });
@@ -278,7 +278,7 @@ public class SearchService extends DescriptionService {
                 //UPDATE SALES TRANSACTION
                 TransactionDao salesTransactionDao = TransactionDao.getInstance();
                 List<SalesTransaction> salesTransactionList = salesTransactionDao.getSalesTransactionList();
-                LOGGER.info("Updating Sales Transaction");
+                LOGGER.info("Backing up Sales Transaction");
                 salesTransactionList.stream().forEach(salesTransaction ->{
                     salesTransactionDao.updateSalesTransactionInProd(salesTransaction);
                 });
