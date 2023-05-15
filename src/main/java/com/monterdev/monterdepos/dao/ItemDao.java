@@ -31,7 +31,7 @@ public class ItemDao {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.save(item);
+            session.saveOrUpdate(item);
             transaction.commit();
         } catch (Exception ex) {
             if (transaction != null) {

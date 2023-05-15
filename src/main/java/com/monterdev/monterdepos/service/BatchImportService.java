@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class BatchImportService extends BatchImportComponent implements Initializable {
@@ -53,6 +54,8 @@ public class BatchImportService extends BatchImportComponent implements Initiali
                         .withType(BatchItems.class)
                         .build().parse();
 
+                List<Item> existingItems = itemDao.getItemList();
+
                 if (!importedItems.isEmpty()) {
                     if (Prompt.confirm("Are you sure you want to import this file? Existing items will be deleted.").get().getText().equalsIgnoreCase("OK")) {
                         importedItems.stream().forEach(e -> {
@@ -65,6 +68,18 @@ public class BatchImportService extends BatchImportComponent implements Initiali
                             item.setCategoryId(1);
                             item.setDiscountable(true);
                             item.setLowStock(10);
+
+                            if(!existingItems.isEmpty()){
+                                Optional<Item> optionalItem = existingItems.stream()
+                                        .filter(x->x.getItemCode().equalsIgnoreCase(e.getBarCode()))
+                                        .findFirst();
+                                if(optionalItem.isPresent()){
+                                    int inStock = optionalItem.get().getInStock();
+                                    int totalStock = inStock + e.getQuantity();
+                                    LOGGER.info("Existing Item: "+e.getItemName());
+                                    item.setInStock(totalStock);
+                                }
+                            }
 
 
                             Purchase purchase = new Purchase();

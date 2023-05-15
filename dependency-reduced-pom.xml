@@ -4,7 +4,7 @@
   <groupId>com.monterdev</groupId>
   <artifactId>monterde-pos</artifactId>
   <name>monterde-pos</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1-RELEASE</version>
   <build>
     <plugins>
       <plugin>
