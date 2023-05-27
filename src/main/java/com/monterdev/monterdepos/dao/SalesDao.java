@@ -53,11 +53,18 @@ public class SalesDao {
             CriteriaBuilder cbSales = session.getCriteriaBuilder();
             CriteriaQuery<Sales> crSales = cbSales.createQuery(Sales.class);
             Root<Sales> rootSales = crSales.from(Sales.class);
-            Predicate salesHasItemCode = cbSales.equal(rootSales.get("transactionNumber"), transactionNumber);
+            Predicate salesHasTransactionNumber = null;
+            if(transactionNumber.length() < 9){
+                salesHasTransactionNumber = cbSales.like(rootSales.get("transactionNumber"), "%"+transactionNumber+"%");
+            }else if(transactionNumber.length() == 9){
+                salesHasTransactionNumber = cbSales.equal(rootSales.get("transactionNumber"), transactionNumber);
+            }
+
             Predicate salesDates = cbSales.between(rootSales.get("dateTransacted"), dateFrom, dateUntil);
-            Predicate salesWhereClause = cbSales.or(salesHasItemCode, salesDates);
+            Predicate salesWhereClause = cbSales.equal(salesHasTransactionNumber, salesDates);
 
             crSales.select(rootSales).where(salesWhereClause);
+            crSales.orderBy(cbSales.asc(rootSales.get("id")));
             Query querySalesTransaction = session.createQuery(crSales)
                     .setFirstResult(beginIndex)
                     .setMaxResults(endIndex);

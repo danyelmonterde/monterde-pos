@@ -28,7 +28,7 @@ import static com.monterdev.monterdepos.constants.ConfigFile.LOCAL_CONFIG_FILE_N
 public class SalesListService extends SalesListComponents implements Initializable {
 
     private int BEGIN_INDEX = 0; //Initial number of rows per page
-    private int END_INDEX = 10; //Initial number of rows per page
+    private int END_INDEX = 10000; //Initial number of rows per page
 
     private List<Sales> salesList;
 

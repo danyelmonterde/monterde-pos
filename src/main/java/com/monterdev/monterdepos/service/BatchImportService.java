@@ -55,7 +55,7 @@ public class BatchImportService extends BatchImportComponent implements Initiali
                         .build().parse();
 
                 List<Item> existingItems = itemDao.getItemList();
-
+                String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
                 if (!importedItems.isEmpty()) {
                     if (Prompt.confirm("Are you sure you want to import this file? Existing items will be deleted.").get().getText().equalsIgnoreCase("OK")) {
                         importedItems.stream().forEach(e -> {
@@ -86,7 +86,7 @@ public class BatchImportService extends BatchImportComponent implements Initiali
                             purchase.setCost(e.getUnitPrice());
                             purchase.setTotal(e.getTotalPrice());
                             purchase.setQuantity(e.getQuantity());
-                            String transactionNumber = TransactionNumberGenerator.generateTransactionNumber();
+
                             purchase.setTransactionNumber(transactionNumber);
                             purchase.setItemCode(e.getBarCode());
                             purchase.setDateBoughtFromSupplier(new Date());

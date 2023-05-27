@@ -48,7 +48,6 @@ public class CartService extends DashboardComponents {
 
     private TransactionDao transactionDao;
 
-
     @FXML
     public void addItemToCart() {
         quantity.setDisable(true);
@@ -262,7 +261,9 @@ public class CartService extends DashboardComponents {
                 systemSalesTransaction.setDateTransacted(new Date());
 
                 List<Double> priceOfItemsInCart = new ArrayList<>();
+
                 cart.getItems().stream().forEach(data -> {
+
                     double sumOfItemsInCart = 0.0;
                     String item_code = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[0];
                     String item_quantity = data.toString().split(CART_TEXT_SEPARATOR_REGEX)[2];
@@ -282,10 +283,10 @@ public class CartService extends DashboardComponents {
                     salesTransaction.setQuantity(Integer.parseInt(item_quantity));
                     salesTransaction.setPrice(item.getAverageCost());
                     salesTransaction.setDateTransacted(new Date());
+
                     salesDao = SalesDao.getInstance();
                     salesTransaction.setTransactionNumber(systemSalesTransaction.getTransactionNumber());
                     salesDao.saveSalesTransaction(salesTransaction);
-
 
                     LOGGER.info("Item and Sales Transaction was saved!");
                 });
@@ -310,6 +311,7 @@ public class CartService extends DashboardComponents {
                 expirationTagNumber.setVisible(false);
                 amountPaid.setDisable(true);
                 quantity.setDisable(true);
+
             }
 
         }
