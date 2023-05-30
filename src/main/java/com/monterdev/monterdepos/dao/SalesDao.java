@@ -61,7 +61,7 @@ public class SalesDao {
             }
 
             Predicate salesDates = cbSales.between(rootSales.get("dateTransacted"), dateFrom, dateUntil);
-            Predicate salesWhereClause = cbSales.equal(salesHasTransactionNumber, salesDates);
+            Predicate salesWhereClause = cbSales.and(salesHasTransactionNumber, salesDates);
 
             crSales.select(rootSales).where(salesWhereClause);
             crSales.orderBy(cbSales.asc(rootSales.get("id")));
